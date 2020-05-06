@@ -2,5 +2,8 @@ module Lib
     ( someFunc
     ) where
 
+import Adapter.HTTP.Main 
+import ClassyPrelude
+
 someFunc :: IO ()
-someFunc = putStrLn "someFunc"
+someFunc = mainH

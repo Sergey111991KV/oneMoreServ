@@ -21,6 +21,14 @@ description:         Please see the README on GitHub at <https://github.com/gith
 
 dependencies:
 - base >= 4.7 && < 5
+- scotty
+- classy-prelude
+- aeson
+- mtl
+
+default-extensions:
+- NoImplicitPrelude
+- OverloadedStrings
 
 library:
   source-dirs: src
