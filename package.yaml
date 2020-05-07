@@ -25,11 +25,26 @@ dependencies:
 - classy-prelude
 - aeson
 - mtl
+- http-types 
+- cookie
+- wai
+- wai-extra
+- blaze-builder
+- digestive-functors
+- digestive-functors-aeson
+- postgresql-simple
+- postgresql-libpq >= 0.9.4.2
+- time
+- katip
 
 default-extensions:
 - NoImplicitPrelude
 - OverloadedStrings
-
+- QuasiQuotes
+- GeneralizedNewtypeDeriving
+- ConstraintKinds
+- FlexibleContexts
+- TemplateHaskell
 library:
   source-dirs: src
 
