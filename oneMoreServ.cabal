@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 3bb6b9e5f4d88bdf31b133029a5113820a537257a4f3023025913b503f7776eb
+-- hash: 595f6de0a5c500b2c968b69f63d419b46e50d04f00b77832d22f39596e4f9df6
 
 name:           oneMoreServ
 version:        0.1.0.0
@@ -30,11 +30,10 @@ library
       Adapter.HTTP.API
       Adapter.HTTP.Common
       Adapter.HTTP.Main
+      Domain.ImportEntity
       Domain.Service.CommonService
       Domain.Service.MainService
-      Domain.Service.ServiceAdmin
-      Domain.Service.ServiceAuthors
-      Domain.Service.ServiceUser
+      Domain.Types.AccesTypes
       Domain.Types.Author
       Domain.Types.Category
       Domain.Types.Comment
@@ -48,7 +47,7 @@ library
       Paths_oneMoreServ
   hs-source-dirs:
       src
-  default-extensions: NoImplicitPrelude OverloadedStrings QuasiQuotes GeneralizedNewtypeDeriving ConstraintKinds FlexibleContexts TemplateHaskell
+  default-extensions: NoImplicitPrelude OverloadedStrings QuasiQuotes GeneralizedNewtypeDeriving ConstraintKinds FlexibleContexts TemplateHaskell ExistentialQuantification RecordWildCards TypeFamilies AllowAmbiguousTypes
   build-depends:
       aeson
     , base >=4.7 && <5
@@ -74,7 +73,7 @@ executable oneMoreServ-exe
       Paths_oneMoreServ
   hs-source-dirs:
       app
-  default-extensions: NoImplicitPrelude OverloadedStrings QuasiQuotes GeneralizedNewtypeDeriving ConstraintKinds FlexibleContexts TemplateHaskell
+  default-extensions: NoImplicitPrelude OverloadedStrings QuasiQuotes GeneralizedNewtypeDeriving ConstraintKinds FlexibleContexts TemplateHaskell ExistentialQuantification RecordWildCards TypeFamilies AllowAmbiguousTypes
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       aeson
@@ -103,7 +102,7 @@ test-suite oneMoreServ-test
       Paths_oneMoreServ
   hs-source-dirs:
       test
-  default-extensions: NoImplicitPrelude OverloadedStrings QuasiQuotes GeneralizedNewtypeDeriving ConstraintKinds FlexibleContexts TemplateHaskell
+  default-extensions: NoImplicitPrelude OverloadedStrings QuasiQuotes GeneralizedNewtypeDeriving ConstraintKinds FlexibleContexts TemplateHaskell ExistentialQuantification RecordWildCards TypeFamilies AllowAmbiguousTypes
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       aeson

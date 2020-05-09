@@ -45,6 +45,11 @@ default-extensions:
 - ConstraintKinds
 - FlexibleContexts
 - TemplateHaskell
+- ExistentialQuantification
+- RecordWildCards
+- TypeFamilies
+- AllowAmbiguousTypes 
+
 library:
   source-dirs: src
 
