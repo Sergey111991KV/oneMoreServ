@@ -13,14 +13,42 @@ class CommonService a where
     getOne  :: Either Error  m
     remove  :: m -> Either Error ()
 
-class CommonService a =>  ExtendedService a where
+class CommonService a =>  CategoryService a where
+    nestedCategory  :: a -> [b]
+    allTreeCategory :: a -> [a]
+
+instance CategoryService Category1 where
+    nestedCategory a =  undefined
+
+instance CategoryService Category2 where
+    nestedCategory a = undefined
+
+instance CategoryService Category3 where
+    nestedCategory a = undefined
+
+instance CommonService Category1 where
+
+instance CommonService Category2 where
+
+instance CommonService Category3 where
+    
+
+data Category = forall a. CategoryService a =>  Category a
+
+
+lst :: [Category]
+lst = [Category (Category1 10 "adf"), Category (Category2 50 "Sadf" 150)]
+
+
+
+class CommonService a =>  FilterService a where
     nestedEntities :: Either Error [m] -- API c вложеныvb все сущности 
-    filterOfData :: Day -> Either Error [nestedEntities] -- API новостей  фильтрация по дате
-    -- API новостей  фильтрация по имени автора
-    -- API новостей  фильтрация по категории по айди
-    -- API новостей  фильтрация по тега по айди
-    -- API новостей  фильтрация по название (вхождение подстроки)
-    -- API новостей  фильтрация по название контент (вхождение подстроки)
+    filterOfData :: Day -> Either Error [m] -- API новостей  фильтрация по дате
+    filterAuthor :: Author -> Either Error [m]-- API новостей  фильтрация по имени автора
+    filterCategory :: Category -> Either Error [m]-- API новостей  фильтрация по категории по айди
+    filterTeg :: Teg -> Either Error [m]-- API новостей  фильтрация по тега по айди
+    filterName :: Text -> Either Error [m] -- API новостей  фильтрация по название (вхождение подстроки)
+    filterContent :: [News] -> Either Error [m]-- API новостей  фильтрация по название контент (вхождение подстроки)
 
 
 
