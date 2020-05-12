@@ -7,6 +7,8 @@ import Text.Digestive.Form ((.:))
 import Network.HTTP.Types.Status
 import Data.Aeson ()
 import Katip
+import Domain.Service.CommonService
+
 
 routes :: ( ScottyError e, MonadIO m)
           => ScottyT e m ()

@@ -8,58 +8,63 @@ import Data.Time
 data Error = AccessError | DataError
 
 class CommonService a where
-    create  :: Either Error m
+    create  :: Maybe m -> Either Error m
     editing :: m -> Either Error m
     getAll  :: Either Error [m]
-    getOne  :: Either Error  m
+    getOne  :: Int -> Either Error  m
     remove  :: m -> Either Error ()
-    printCategoryCommon :: a -> String
+    
 
-class CommonService a =>  CategoryService a where
+class  CategoryService a where
     nestedCategory  :: a -> [b]
     allTreeCategory :: a -> [a]
-    printCategory :: a -> String
-
+    
 instance CategoryService Category1 where
     nestedCategory a =  undefined
-    printCategory a =  name_1 a
+   
 
 instance CategoryService Category2 where
     nestedCategory a = undefined
-    printCategory a =  name_2 a
-
+    
 instance CategoryService Category3 where
     nestedCategory a = undefined
-    printCategory a = name_3 a
-
+    
     
 
-instance CommonService Category1 where
-    printCategoryCommon a = (name_1 a) ++ " Common "
+-- instance CommonService Category1 where
+   
+-- instance CommonService Category2 where
+  
+-- instance CommonService Category3 where
 
-instance CommonService Category2 where
-    printCategoryCommon a = (name_2 a) ++ " Common "
+instance CommonService Category where
 
-instance CommonService Category3 where
-    printCategoryCommon a = (name_3 a) ++ " Common "
+instance CommonService Author where
+-- create m    = undefined
+-- editing m   =  undefined
+-- getAll      = undefined
+-- getOne  i   = undefined
+-- remove  m   = undefined
+               
+instance CommonService Comment where
+
+instance CommonService Draft where
+
+instance CommonService News where
+
+instance CommonService Teg where
+
+instance CommonService User where
+    
 
 data Category = forall a. CategoryService a =>  Category a
+data Entity   = forall a. CommonService a =>  Entity a
+
+gg :: [Entity]
+gg = [Entity (Author 44 44 "daf"), Entity (Category (Category1 22 "adf"))] -- пример
 
 
-lst :: [Category]
-lst = [Category (Category1 10 "adf"), Category (Category2 50 "Sadf" 150)]
-
-printList :: IO()
-printList  = do
-    forM_ lst $ \
-        (Category obj) -> print $ printCategory obj
-    forM_ lst $ \
-        (Category obj) -> print $ printCategoryCommon obj
-    -- (printCategory x)
-        -- printList xs
-
-
-class CommonService a =>  FilterService a where
+class CommonService a => FilterService a where
     nestedEntities :: Either Error [m] -- API c вложеныvb все сущности 
     filterOfData :: Day -> Either Error [m] -- API новостей  фильтрация по дате
     filterAuthor :: Author -> Either Error [m]-- API новостей  фильтрация по имени автора
@@ -71,15 +76,18 @@ class CommonService a =>  FilterService a where
 
 
 
-    -- API новостей должно поддерживать поиск по строке, которая может быть найдена либо в текстовом контенте,
-    --  либо в имени автора, либо в названии категории/тега
+class CommonService a => SearchIn a where
+    inContent :: a -> [a]   -- API новостей должно поддерживать поиск по строке, которая может быть найдена либо в текстовом контенте,
+    inEntyty  :: a -> [a]   --  либо в имени автора, либо в названии категории/тега
 
 
---     API новостей должно поддерживать сортировку по:
--- дате,
--- автору (имя по алфавиту), 
--- по категориям (название по алфавиту), 
--- по количеству фотографий
+class (FilterService a, CommonService a) => SortedOf a where        --     API новостей должно поддерживать сортировку по:
+    sortedDate      :: Day -> [a]           -- дате,
+    sortedAuthor    :: Author -> [a]        -- автору (имя по алфавиту),
+    sortedCategory  :: [a] -> [a] -- по категориям (название по алфавиту), 
+    sortedPhoto     :: [a] -> [a] -- по количеству фотографий
+
+
 
 
 

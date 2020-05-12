@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 595f6de0a5c500b2c968b69f63d419b46e50d04f00b77832d22f39596e4f9df6
+-- hash: d5c4c277160d884fb98dee7e9c7a00b30b507d0d238351cd565281a867bfa79d
 
 name:           oneMoreServ
 version:        0.1.0.0
@@ -28,11 +28,27 @@ source-repository head
 library
   exposed-modules:
       Adapter.HTTP.API
+      Adapter.HTTP.APIEntitys.APIAuthors
+      Adapter.HTTP.APIEntitys.APICategory
+      Adapter.HTTP.APIEntitys.APIComment
+      Adapter.HTTP.APIEntitys.APIDraft
+      Adapter.HTTP.APIEntitys.APINews
+      Adapter.HTTP.APIEntitys.APITeg
+      Adapter.HTTP.APIEntitys.APIUser
       Adapter.HTTP.Common
       Adapter.HTTP.Main
+      Adapter.PostgreSQL.APIConnection
+      Adapter.PostgreSQL.APIMigrations
       Domain.ImportEntity
       Domain.Service.CommonService
       Domain.Service.MainService
+      Domain.Service.ServiseEntity.ServiseAuthor
+      Domain.Service.ServiseEntity.ServiseCategory
+      Domain.Service.ServiseEntity.ServiseComment
+      Domain.Service.ServiseEntity.ServiseDraft
+      Domain.Service.ServiseEntity.ServiseNews
+      Domain.Service.ServiseEntity.ServiseTeg
+      Domain.Service.ServiseEntity.ServiseUser
       Domain.Types.AccesTypes
       Domain.Types.Author
       Domain.Types.Category
@@ -47,21 +63,30 @@ library
       Paths_oneMoreServ
   hs-source-dirs:
       src
-  default-extensions: NoImplicitPrelude OverloadedStrings QuasiQuotes GeneralizedNewtypeDeriving ConstraintKinds FlexibleContexts TemplateHaskell ExistentialQuantification RecordWildCards TypeFamilies AllowAmbiguousTypes
+  default-extensions: NoImplicitPrelude OverloadedStrings QuasiQuotes GeneralizedNewtypeDeriving ConstraintKinds FlexibleContexts TemplateHaskell ExistentialQuantification RecordWildCards TypeFamilies AllowAmbiguousTypes DeriveGeneric
   build-depends:
       aeson
     , base >=4.7 && <5
     , blaze-builder
     , classy-prelude
+    , configurator
     , cookie
+    , data-has
     , digestive-functors
     , digestive-functors-aeson
+    , exceptions
     , http-types
     , katip
     , mtl
+    , pcre-heavy
     , postgresql-libpq >=0.9.4.2
     , postgresql-simple
+    , postgresql-simple-migration
+    , resource-pool
     , scotty
+    , string-random
+    , template-haskell
+    , text
     , time
     , wai
     , wai-extra
@@ -73,23 +98,32 @@ executable oneMoreServ-exe
       Paths_oneMoreServ
   hs-source-dirs:
       app
-  default-extensions: NoImplicitPrelude OverloadedStrings QuasiQuotes GeneralizedNewtypeDeriving ConstraintKinds FlexibleContexts TemplateHaskell ExistentialQuantification RecordWildCards TypeFamilies AllowAmbiguousTypes
+  default-extensions: NoImplicitPrelude OverloadedStrings QuasiQuotes GeneralizedNewtypeDeriving ConstraintKinds FlexibleContexts TemplateHaskell ExistentialQuantification RecordWildCards TypeFamilies AllowAmbiguousTypes DeriveGeneric
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       aeson
     , base >=4.7 && <5
     , blaze-builder
     , classy-prelude
+    , configurator
     , cookie
+    , data-has
     , digestive-functors
     , digestive-functors-aeson
+    , exceptions
     , http-types
     , katip
     , mtl
     , oneMoreServ
+    , pcre-heavy
     , postgresql-libpq >=0.9.4.2
     , postgresql-simple
+    , postgresql-simple-migration
+    , resource-pool
     , scotty
+    , string-random
+    , template-haskell
+    , text
     , time
     , wai
     , wai-extra
@@ -102,23 +136,32 @@ test-suite oneMoreServ-test
       Paths_oneMoreServ
   hs-source-dirs:
       test
-  default-extensions: NoImplicitPrelude OverloadedStrings QuasiQuotes GeneralizedNewtypeDeriving ConstraintKinds FlexibleContexts TemplateHaskell ExistentialQuantification RecordWildCards TypeFamilies AllowAmbiguousTypes
+  default-extensions: NoImplicitPrelude OverloadedStrings QuasiQuotes GeneralizedNewtypeDeriving ConstraintKinds FlexibleContexts TemplateHaskell ExistentialQuantification RecordWildCards TypeFamilies AllowAmbiguousTypes DeriveGeneric
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       aeson
     , base >=4.7 && <5
     , blaze-builder
     , classy-prelude
+    , configurator
     , cookie
+    , data-has
     , digestive-functors
     , digestive-functors-aeson
+    , exceptions
     , http-types
     , katip
     , mtl
     , oneMoreServ
+    , pcre-heavy
     , postgresql-libpq >=0.9.4.2
     , postgresql-simple
+    , postgresql-simple-migration
+    , resource-pool
     , scotty
+    , string-random
+    , template-haskell
+    , text
     , time
     , wai
     , wai-extra

@@ -5,6 +5,13 @@
 
 packages:
 - completed:
+    hackage: string-random-0.1.0.0@sha256:421a99e3330a23ae664a706be4712c5ca0ff188bbd5d95e8a4a1fbf143365b98,2238
+    pantry-tree:
+      size: 434
+      sha256: 4092aa6c08612cf9c07a1f1eea0ae3e42b28bac9e621bf491c781859a70bffcd
+  original:
+    hackage: string-random-0.1.0.0
+- completed:
     hackage: digestive-functors-0.8.4.0@sha256:eb2ce9e55a8d2f26a9f5c8386e0d764fe1ce47eb0430af84104bf12dab431fa9,3287
     pantry-tree:
       size: 1682
@@ -18,6 +25,13 @@ packages:
       sha256: 7a26dd5aad398f01bf3cb11ff887e9e1054eab1b2bd436b9494720f4be69baba
   original:
     hackage: digestive-functors-aeson-1.1.27
+- completed:
+    hackage: postgresql-simple-migration-0.1.15.0@sha256:0e24e96908430f5caf9c1c1d9ca7c5c108e4e0409a255e2cbd77e8cd252dbb02,3879
+    pantry-tree:
+      size: 766
+      sha256: c2843bfe43b804992bc913f33ec6b2c6cb0fc99c6d931b6ff85894e8aef9a99e
+  original:
+    hackage: postgresql-simple-migration-0.1.15.0
 snapshots:
 - completed:
     size: 494638

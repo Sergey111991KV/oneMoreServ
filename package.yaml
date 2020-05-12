@@ -23,6 +23,7 @@ dependencies:
 - base >= 4.7 && < 5
 - scotty
 - classy-prelude
+- template-haskell
 - aeson
 - mtl
 - http-types 
@@ -36,6 +37,16 @@ dependencies:
 - postgresql-libpq >= 0.9.4.2
 - time
 - katip
+- resource-pool
+- postgresql-simple 
+- postgresql-simple-migration
+- configurator
+- exceptions
+- data-has
+- pcre-heavy
+- text
+- string-random
+
 
 default-extensions:
 - NoImplicitPrelude
@@ -49,6 +60,8 @@ default-extensions:
 - RecordWildCards
 - TypeFamilies
 - AllowAmbiguousTypes 
+- DeriveGeneric
+
 
 library:
   source-dirs: src
