@@ -9,6 +9,10 @@ import Data.Aeson hiding (json)
 import Network.HTTP.Types.Status
 import Blaze.ByteString.Builder (toLazyByteString)
 import Web.Cookie
+import Domain.ImportEntity
+
+type MyServer s = ScottyT Error (IO)
+type MyAction s = ActionT Error (IO)
 
 parseAndValidateJSON :: (ScottyError e, MonadIO m, ToJSON v)
                      => DF.Form v m a -> ActionT e m a

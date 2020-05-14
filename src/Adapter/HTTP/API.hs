@@ -15,7 +15,12 @@ routes :: ( ScottyError e, MonadIO m)
 routes = do
     get "/api/news" $ text "news"
     -- тут дохера всего
-    get "/api/authors" $ text "authors" 
+    get "/api/authors/create/:name/:description" $ do
+        name <- param "name" 
+        description <- param "description" 
+        print "sadfsa"
+        text (name ++ description)
+        
     -- — и создание, и редактирование, и получение, и удаление, только для админов, 
     get "/api/category" $ text "category" 
     -- получение всем, создание, удаление и редактирование только для админов, 

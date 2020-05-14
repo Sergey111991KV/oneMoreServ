@@ -6,5 +6,6 @@ import Domain.Types.Comment    as Y
 import Domain.Types.Draft      as Y
 import Domain.Types.News       as Y
 import Domain.Types.Teg        as Y
-import Domain.Types.User       as Y
+import Domain.Types.UserB      as Y
 import Domain.Types.AccesTypes as Y
+import Domain.Types.Errors     as Y

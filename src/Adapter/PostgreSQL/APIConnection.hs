@@ -30,12 +30,10 @@ newConn conf = connect defaultConnectInfo
                             , connectPassword = dbPassword conf
                             , connectDatabase = dbName conf
                             }
+     
+-- lastId :: 
 
--- conn <- connect defaultConnectInfo { connectDatabase = "haskell" }
+-- -- conn <- connect defaultConnectInfo { connectDatabase = "haskell" }
 
 
-create  :: PG r m =>  Maybe Author -> Either CS.Error Author
-create m = do
-    case m of
-        Nothing -> Left CS.DataError
-        Just auth -> Right auth
+

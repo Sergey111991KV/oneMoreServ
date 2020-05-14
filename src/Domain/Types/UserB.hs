@@ -1,12 +1,13 @@
 
-module Domain.Types.User where
+module Domain.Types.UserB where
 
 import Domain.Types.Imports
 import ClassyPrelude
 
-data User = User { 
+data UserB = UserB { 
     userId_user      :: Int,
     name_user        :: String,
+    password_user    :: String,
     second_name_user :: String,
     data_create_user :: UTCTime,
     -- ZonedTime,
@@ -14,7 +15,7 @@ data User = User {
     avatar_user      :: String
     } deriving (Show) 
 
-instance FromRow User where
-    fromRow = User <$> field <*> field  <*> field  <*> field  <*> field  <*> field 
+instance FromRow UserB where
+    fromRow = UserB <$> field <*> field <*> field  <*> field  <*> field  <*> field  <*> field 
 
 

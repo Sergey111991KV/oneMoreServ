@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: d5c4c277160d884fb98dee7e9c7a00b30b507d0d238351cd565281a867bfa79d
+-- hash: c5ee62e1c2a9d297d62c06fcfd68cb2b41aa3cfc30118d378f28ce6e8c27942d
 
 name:           oneMoreServ
 version:        0.1.0.0
@@ -35,10 +35,13 @@ library
       Adapter.HTTP.APIEntitys.APINews
       Adapter.HTTP.APIEntitys.APITeg
       Adapter.HTTP.APIEntitys.APIUser
+      Adapter.HTTP.Auth
       Adapter.HTTP.Common
       Adapter.HTTP.Main
       Adapter.PostgreSQL.APIConnection
-      Adapter.PostgreSQL.APIMigrations
+      Adapter.PostgreSQL.APIEntityes.APIPosAuthor
+      Adapter.PostgreSQL.APIEntityes.APIPosCategory
+      Adapter.PostgreSQL.Migrations.APIMigrations
       Domain.ImportEntity
       Domain.Service.CommonService
       Domain.Service.MainService
@@ -54,10 +57,11 @@ library
       Domain.Types.Category
       Domain.Types.Comment
       Domain.Types.Draft
+      Domain.Types.Errors
       Domain.Types.Imports
       Domain.Types.News
       Domain.Types.Teg
-      Domain.Types.User
+      Domain.Types.UserB
       Lib
   other-modules:
       Paths_oneMoreServ

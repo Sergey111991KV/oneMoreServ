@@ -1,4 +1,4 @@
-module Adapter.PostgreSQL.APIMigrations where
+module Adapter.PostgreSQL.Migrations.APIMigrations where
 
 import ClassyPrelude
 import Data.Pool

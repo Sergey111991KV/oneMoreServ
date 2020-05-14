@@ -29,5 +29,5 @@ someFunc = do
       Nothing -> putStrLn "No database configuration found, terminating..."
       Just conf -> do
         pool <- createPool (newConn conf) close 1 40 10
-        putStrLn "database configuration found!!!"  
+        
         mainH 3000 id

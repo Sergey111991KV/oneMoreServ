@@ -5,14 +5,16 @@ import Domain.ImportEntity
 import Data.Time
 
 
-data Error = AccessError | DataError
-
 class CommonService a where
-    create  :: Maybe m -> Either Error m
-    editing :: m -> Either Error m
-    getAll  :: Either Error [m]
-    getOne  :: Int -> Either Error  m
-    remove  :: m -> Either Error ()
+    create  :: Access -> Maybe m -> Either Error m
+    --- вот тут я не много не понял - определенно нужна какая-то функция которая будет собирать, то что нужно
+    --- будет создать - и создать это нужно из контакта юзера с браузером, но так как это не делается - то как и во
+    --- во всех туториалах я создам вспомогательные функции создающие сущности и отправляющие их в базу данных, хотя можно 
+    --- сделать функцию которая и берет их по апи... как вариант)
+    editing :: Access -> m -> Either Error m
+    getAll  :: Access -> Either Error [m]
+    getOne  :: Access ->  Int -> Either Error  m
+    remove  :: Access ->  m -> Either Error ()
     
 
 class  CategoryService a where
@@ -39,7 +41,7 @@ instance CategoryService Category3 where
 
 instance CommonService Category where
 
-instance CommonService Author where
+
 -- create m    = undefined
 -- editing m   =  undefined
 -- getAll      = undefined
@@ -60,8 +62,8 @@ instance CommonService User where
 data Category = forall a. CategoryService a =>  Category a
 data Entity   = forall a. CommonService a =>  Entity a
 
-gg :: [Entity]
-gg = [Entity (Author 44 44 "daf"), Entity (Category (Category1 22 "adf"))] -- пример
+-- gg :: [Entity]
+-- gg = [Entity (Author 44 44 "daf"), Entity (Category (Category1 22 "adf"))] -- пример
 
 
 class CommonService a => FilterService a where
