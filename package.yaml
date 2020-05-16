@@ -47,6 +47,7 @@ dependencies:
 - pcre-heavy
 - text
 - string-random
+- hedis
 
 
 default-extensions:

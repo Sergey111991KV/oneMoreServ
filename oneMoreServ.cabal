@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 2a5f5a552241ce0e692ef60196b5c9d028b37e4e84f7aa1bf83a2bfadaad0239
+-- hash: d1a4050e15165167a6afbe740e85abc8223d3ff55666defe8f18b8ebbda3ba9e
 
 name:           oneMoreServ
 version:        0.1.0.0
@@ -27,44 +27,6 @@ source-repository head
 
 library
   exposed-modules:
-      Adapter.HTTP.API.API
-      Adapter.HTTP.API.APIAuth
-      Adapter.HTTP.API.APIAuthors
-      Adapter.HTTP.API.APICategory
-      Adapter.HTTP.API.APIComment
-      Adapter.HTTP.API.APIDraft
-      Adapter.HTTP.API.APINews
-      Adapter.HTTP.API.APITeg
-      Adapter.HTTP.API.APIUser
-      Adapter.HTTP.Common
-      Adapter.HTTP.Main
-      Adapter.InMemory.Auth
-      Adapter.PostgreSQL.APIConnection
-      Adapter.PostgreSQL.APIEntityes.APIPosAuthor
-      Adapter.PostgreSQL.APIEntityes.APIPosCategory
-      Adapter.PostgreSQL.Migrations.APIMigrations
-      Domain.ImportEntity
-      Domain.ImportService
-      Domain.Service.CommonService
-      Domain.Service.ServiceAuth.ServiceAuth
-      Domain.Service.ServiceAuth.Validation.Validation
-      Domain.Service.ServiseEntity.ServiseAuthor
-      Domain.Service.ServiseEntity.ServiseCategory
-      Domain.Service.ServiseEntity.ServiseComment
-      Domain.Service.ServiseEntity.ServiseDraft
-      Domain.Service.ServiseEntity.ServiseNews
-      Domain.Service.ServiseEntity.ServiseTeg
-      Domain.Service.ServiseEntity.ServiseUser
-      Domain.Types.AccesTypes
-      Domain.Types.Author
-      Domain.Types.Category
-      Domain.Types.Comment
-      Domain.Types.Draft
-      Domain.Types.Errors
-      Domain.Types.Imports
-      Domain.Types.News
-      Domain.Types.Teg
-      Domain.Types.UserB
       Lib
   other-modules:
       Paths_oneMoreServ
@@ -82,6 +44,7 @@ library
     , digestive-functors
     , digestive-functors-aeson
     , exceptions
+    , hedis
     , http-types
     , katip
     , mtl
@@ -119,6 +82,7 @@ executable oneMoreServ-exe
     , digestive-functors
     , digestive-functors-aeson
     , exceptions
+    , hedis
     , http-types
     , katip
     , mtl
@@ -158,6 +122,7 @@ test-suite oneMoreServ-test
     , digestive-functors
     , digestive-functors-aeson
     , exceptions
+    , hedis
     , http-types
     , katip
     , mtl
