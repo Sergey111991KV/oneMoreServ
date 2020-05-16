@@ -1,9 +1,6 @@
 module Domain.Types.AccesTypes where
 
 import Domain.Types.Imports
-import qualified Text.Digestive.Form as DF 
-import Domain.Validation.Validation
-
 import ClassyPrelude
 
 data Access = Users | Authors | Admins deriving (Show, Eq)
@@ -25,18 +22,5 @@ data Auth = Auth
 
 
 
-
-data State = State
-  { stateAuths :: [(UserId, Auth)]
---   , stateUserIdCounter :: Int
-  , stateSessions :: Map SessionId UserId
-  } deriving (Show, Eq)
-
-initialState :: State
-initialState = State 
-  { stateAuths = []
---   , stateUserIdCounter = 0
-  , stateSessions = mempty
-  }
 
 

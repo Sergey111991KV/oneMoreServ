@@ -1,4 +1,4 @@
-module Domain.Validation.Validation where
+module Domain.Service.ServiceAuth.Validation.Validation where
   
 import ClassyPrelude
 import Text.Regex.PCRE.Heavy

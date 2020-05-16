@@ -3,19 +3,10 @@ module Domain.Service.ServiceAuth.ServiceAuth where
 import ClassyPrelude
 import Domain.ImportEntity
 import Data.Time
-import Domain.Validation.Validation 
+import Domain.Service.ServiceAuth.Validation.Validation 
 import Text.Regex.PCRE.Heavy
 import Domain.Service.CommonService 
 
-resolveSessionId :: (SessionRepo m) => SessionId -> m (Maybe UserId)
-resolveSessionId = findUserIdBySessionId
-
-initialState :: State
-initialState = State 
-  { stateAuths = []
---   , stateUserIdCounter = 0
-  , stateSessions = mempty
-  }
 
 
 mkPassword :: Text -> Either [ErrMsg] Password

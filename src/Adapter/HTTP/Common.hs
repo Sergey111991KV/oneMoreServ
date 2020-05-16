@@ -10,11 +10,14 @@ import Network.HTTP.Types.Status
 import Blaze.ByteString.Builder (toLazyByteString)
 import Web.Cookie
 import Data.Time.Lens
-import Domain.Service.ServiceAuth.ServiceAuth
 import Text.StringRandom
 import Data.Has
-import Domain.Service.CommonService
+
+import Domain.ImportService
 import Domain.ImportEntity
+
+
+-- * Forms
 
 toResult :: Either e a -> DF.Result e a
 toResult = either DF.Error DF.Success
@@ -34,6 +37,7 @@ parseAndValidateJSON form = do
       return result
 -- В общем функция анализирует Форму (проверка входных данных) и если все норм -> возвращает порт соединения
 
+-- Cookie
 
 
 setCookie :: (ScottyError e, Monad m) => SetCookie -> ActionT e m ()
@@ -80,23 +84,6 @@ reqCurrentUserId = do
     Just userId ->
       return userId
 
-
-      
-newSession uId = do
-          tvar <- asks getter
-          sId <- liftIO $ ((tshow uId) <>) <$> stringRandomIO "[A-Za-z0-9]{16}"
-          atomically $ do
-            state <- readTVar tvar
-            let sessions = stateSessions state
-                newSessions = insertMap sId uId sessions
-                newState = state { stateSessions = newSessions }
-            writeTVar tvar newState
-            return sId
-        
-            
-findUserIdBySessionId sId = do
-          tvar <- asks getter
-          liftIO $ lookup sId . stateSessions <$> readTVarIO tvar
 
 
         
