@@ -25,6 +25,7 @@ dependencies:
 - classy-prelude
 - template-haskell
 - aeson
+- time-lens
 - mtl
 - http-types 
 - cookie

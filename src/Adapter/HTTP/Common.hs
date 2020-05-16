@@ -9,10 +9,16 @@ import Data.Aeson hiding (json)
 import Network.HTTP.Types.Status
 import Blaze.ByteString.Builder (toLazyByteString)
 import Web.Cookie
+import Data.Time.Lens
+import Domain.Service.ServiceAuth.ServiceAuth
+import Text.StringRandom
+import Data.Has
+import Domain.Service.CommonService
 import Domain.ImportEntity
 
-type MyServer s = ScottyT Error (IO)
-type MyAction s = ActionT Error (IO)
+toResult :: Either e a -> DF.Result e a
+toResult = either DF.Error DF.Success
+
 
 parseAndValidateJSON :: (ScottyError e, MonadIO m, ToJSON v)
                      => DF.Form v m a -> ActionT e m a
@@ -29,19 +35,6 @@ parseAndValidateJSON form = do
 -- В общем функция анализирует Форму (проверка входных данных) и если все норм -> возвращает порт соединения
 
 
--- parseAndValidateJSON :: (ScottyError e, MonadIO m, ToJSON v)
---                       => DF.Form v m a -> ActionT e m a
--- parseAndValidateJSON form = do
---     val <- jsonData 'rescue' (\_ -> return Null)
---     validationResult <- lift $ DF.digestJSON form val
---     case validationResult of
---         (v, Nothing) -> do
---             status status400 -- статус 
---             json $ DF.jsonErrors v -- получение ошибки 
---             finish
---         (_, Just result) ->
---             return result 
---   я не знаю какого хрена - но эта функция не работает!!!!!
 
 setCookie :: (ScottyError e, Monad m) => SetCookie -> ActionT e m ()
 setCookie = setHeader "Set-Cookie" . decodeUtf8 . toLazyByteString . renderSetCookie
@@ -55,3 +48,58 @@ getCookie key = do
     let bsKey = encodeUtf8 key
     val <- lookup bsKey cookie
     return $ decodeUtf8 val
+
+setSessionIdInCookie :: (MonadIO m, ScottyError e) => SessionId -> ActionT e m ()
+setSessionIdInCookie sId = do
+      curTime <- liftIO getCurrentTime
+      setCookie $ def { setCookieName = "sId"
+                      , setCookiePath = Just "/"
+                      , setCookieValue = encodeUtf8 sId
+                      , setCookieExpires = Just $ modL month (+ 1) curTime
+                      , setCookieHttpOnly = True
+                      , setCookieSecure = False
+                      , setCookieSameSite = Just sameSiteLax
+                      }
+
+  
+getCurrentUserId :: (SessionRepo m, ScottyError e) => ActionT e m (Maybe UserId)
+getCurrentUserId = do
+  maySessionId <- getCookie "sId"
+  case maySessionId of
+    Nothing -> return Nothing
+    Just sId -> lift $ resolveSessionId sId
+
+reqCurrentUserId :: (SessionRepo m, ScottyError e) => ActionT e m UserId
+reqCurrentUserId = do
+  mayUserId <- getCurrentUserId
+  case mayUserId of
+    Nothing -> do
+      status status401
+      json ("AuthRequired" :: Text)
+      finish
+    Just userId ->
+      return userId
+
+
+      
+newSession uId = do
+          tvar <- asks getter
+          sId <- liftIO $ ((tshow uId) <>) <$> stringRandomIO "[A-Za-z0-9]{16}"
+          atomically $ do
+            state <- readTVar tvar
+            let sessions = stateSessions state
+                newSessions = insertMap sId uId sessions
+                newState = state { stateSessions = newSessions }
+            writeTVar tvar newState
+            return sId
+        
+            
+findUserIdBySessionId sId = do
+          tvar <- asks getter
+          liftIO $ lookup sId . stateSessions <$> readTVarIO tvar
+
+
+        
+
+
+

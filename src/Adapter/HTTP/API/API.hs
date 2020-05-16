@@ -1,4 +1,4 @@
-module Adapter.HTTP.API where
+module Adapter.HTTP.API.API where
 
 import ClassyPrelude
 import Web.Scotty.Trans
@@ -8,13 +8,18 @@ import Network.HTTP.Types.Status
 import Data.Aeson ()
 import Katip
 import Domain.Service.CommonService
+import Domain.ImportEntity
 
+
+import Adapter.HTTP.API.APINews
+
+afd :: Access
+afd = Users
 
 routes :: ( ScottyError e, MonadIO m)
           => ScottyT e m ()
 routes = do
-    get "/api/news" $ text "news"
-    -- тут дохера всего
+    routesNews afd
     get "/api/authors/create/:name/:description" $ do
         name <- param "name" 
         description <- param "description" 

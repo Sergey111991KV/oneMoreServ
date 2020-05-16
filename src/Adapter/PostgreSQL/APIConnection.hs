@@ -1,7 +1,6 @@
 module Adapter.PostgreSQL.APIConnection where
 
 import ClassyPrelude
-import Domain.ImportEntity
 import Database.PostgreSQL.Simple
 import qualified Domain.Service.CommonService as CS
 import Data.Has

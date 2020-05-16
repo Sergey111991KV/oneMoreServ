@@ -56,7 +56,7 @@ instance CommonService News where
 
 instance CommonService Teg where
 
-instance CommonService User where
+instance CommonService UserB where
     
 
 data Category = forall a. CategoryService a =>  Category a
@@ -91,7 +91,14 @@ class (FilterService a, CommonService a) => SortedOf a where        --     API Ð
 
 
 
-
+class (Monad m) => SessionRepo m where
+            newSession :: UserId -> m SessionId
+            findUserIdBySessionId :: SessionId -> m (Maybe UserId)
+          
+          
+login ::  Auth -> m (Either Error SessionId)
+login auth = undefined
+          
 
 
 
