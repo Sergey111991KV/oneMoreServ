@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: d1a4050e15165167a6afbe740e85abc8223d3ff55666defe8f18b8ebbda3ba9e
+-- hash: 1ac210a13b7b21adecd5d797e308c01f3ce6410ba172f862a1fca31b3976dbb3
 
 name:           oneMoreServ
 version:        0.1.0.0
@@ -27,6 +27,11 @@ source-repository head
 
 library
   exposed-modules:
+      Adapter.InMemory.Auth
+      Domain.ImportEntity
+      Domain.Types.AccesTypes
+      Domain.Types.Imports
+      Domain.Validation.Validation
       Lib
   other-modules:
       Paths_oneMoreServ
