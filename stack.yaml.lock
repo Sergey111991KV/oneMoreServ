@@ -39,6 +39,13 @@ packages:
       sha256: dd69997fefc1528a3c5f5e4bc0f900f7c1d80c79d714d64be9ef61c526f47437
   original:
     hackage: hedis-0.12.13
+- completed:
+    hackage: MissingH-1.4.3.0@sha256:7136282773f7b3e7ce3af856b41dde98a04f9b03c51813c98d040fc060dcaa53,4650
+    pantry-tree:
+      size: 5271
+      sha256: b8e1b8f04bde976538303752932ad6a9ada1eacaa1c28fdb514022fc62be80d6
+  original:
+    hackage: MissingH-1.4.3.0
 snapshots:
 - completed:
     size: 494638

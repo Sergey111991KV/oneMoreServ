@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 1ac210a13b7b21adecd5d797e308c01f3ce6410ba172f862a1fca31b3976dbb3
+-- hash: 9c97fd5db9376c668cc8f0cbc07e330393f99fa0de6c846c51bdc064db82a6de
 
 name:           oneMoreServ
 version:        0.1.0.0
@@ -28,10 +28,12 @@ source-repository head
 library
   exposed-modules:
       Adapter.InMemory.Auth
+      Adapter.PostgreSQL.Auth
       Domain.ImportEntity
       Domain.Types.AccesTypes
       Domain.Types.Imports
       Domain.Validation.Validation
+      Examples.Examples
       Lib
   other-modules:
       Paths_oneMoreServ
@@ -39,7 +41,8 @@ library
       src
   default-extensions: NoImplicitPrelude OverloadedStrings QuasiQuotes GeneralizedNewtypeDeriving ConstraintKinds FlexibleContexts TemplateHaskell ExistentialQuantification RecordWildCards TypeFamilies AllowAmbiguousTypes DeriveGeneric
   build-depends:
-      aeson
+      MissingH
+    , aeson
     , base >=4.7 && <5
     , blaze-builder
     , classy-prelude
@@ -77,7 +80,8 @@ executable oneMoreServ-exe
   default-extensions: NoImplicitPrelude OverloadedStrings QuasiQuotes GeneralizedNewtypeDeriving ConstraintKinds FlexibleContexts TemplateHaskell ExistentialQuantification RecordWildCards TypeFamilies AllowAmbiguousTypes DeriveGeneric
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      aeson
+      MissingH
+    , aeson
     , base >=4.7 && <5
     , blaze-builder
     , classy-prelude
@@ -117,7 +121,8 @@ test-suite oneMoreServ-test
   default-extensions: NoImplicitPrelude OverloadedStrings QuasiQuotes GeneralizedNewtypeDeriving ConstraintKinds FlexibleContexts TemplateHaskell ExistentialQuantification RecordWildCards TypeFamilies AllowAmbiguousTypes DeriveGeneric
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      aeson
+      MissingH
+    , aeson
     , base >=4.7 && <5
     , blaze-builder
     , classy-prelude

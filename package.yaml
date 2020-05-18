@@ -48,6 +48,7 @@ dependencies:
 - text
 - string-random
 - hedis
+- MissingH
 
 
 default-extensions:
