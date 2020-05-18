@@ -10,24 +10,22 @@ import Data.Aeson
 import GHC.Generics
 
 data Auth = Auth
-  { authLogin :: Login
+  { authLogin    :: Login
   , authPassword :: Password
-  , authAccess   :: Access
+  , authAuthor   :: Bool
+  , authAdmin    :: Bool
   } deriving (Show, Eq)
 
 
-newtype Login = Login { emailRaw :: Text } deriving (Show, Eq)
+newtype Login = Login { loginRaw :: Text } deriving (Show, Eq)
 
 rawLogin :: Login -> Text
-rawLogin = emailRaw
+rawLogin = loginRaw
 
 newtype Password = Password { passwordRaw :: Text } deriving (Show, Eq)
 
 rawPassword :: Password -> Text
 rawPassword = passwordRaw
-
-data Access = Users | Authors | Admins deriving (Show, Eq)
-         
 
 
 newtype UserId = UserId Int deriving (Generic, Show, Eq, Ord)
@@ -40,9 +38,11 @@ data LoginError = LoginError deriving (Show, Eq)
 
           
 class Monad m => SessionRepo m where
-    findUserIdByAuth      :: Auth -> m (Maybe UserId)
-    newSession            :: UserId -> m SessionId
+    findAuth                :: Login -> Password -> m (Maybe Auth)
+    findUserIdByAuth        :: Auth -> m (Maybe UserId)
+    newSession              :: UserId -> m SessionId
     findUserIdBySessionId   :: SessionId -> m (Maybe UserId)
+   
 
             --- Katip
 
@@ -54,12 +54,16 @@ withUserIdContext uId = katipAddContext (sl "userId" uId)
 resolveSessionId :: SessionRepo m => SessionId -> m (Maybe UserId)
 resolveSessionId = findUserIdBySessionId
           
-login :: (KatipContext m, SessionRepo m) => Auth -> m (Either LoginError SessionId)
-login auth = runExceptT $ do
-  result <- lift $ findUserIdByAuth auth
-  case result of
+login :: (KatipContext m, SessionRepo m) => Login -> Password -> m (Either LoginError SessionId)
+login log pass = runExceptT $ do
+  resultFirst  <- lift $ findAuth log pass
+  case resultFirst of
     Nothing -> throwError LoginError
-    Just uId -> withUserIdContext uId . lift $ newSession uId
+    Just auth -> do
+      resultSecond <- lift $ findUserIdByAuth auth
+      case resultSecond of
+        Nothing -> throwError LoginError
+        Just uId -> withUserIdContext uId . lift $ newSession uId
 
 
 
