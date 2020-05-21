@@ -64,18 +64,18 @@ initState = Config {
                     , configIdleConnTimeout = 10
                     }
 
-instance FromField E.Login where
-                            fromField field mb_bytestring = E.Login <$> fromField field mb_bytestring
+-- instance FromField E.Login where
+--                             fromField field mb_bytestring = E.Login <$> fromField field mb_bytestring
                         
-instance FromField E.Password where
-                            fromField field mb_bytestring = E.Password <$> fromField field mb_bytestring
+-- instance FromField E.Password where
+--                             fromField field mb_bytestring = E.Password <$> fromField field mb_bytestring
                                           
                         
-instance FromRow E.UserId where
-                            fromRow = E.UserId <$> field
+-- instance FromRow E.UserId where
+--                             fromRow = E.UserId <$> field
                         
-instance FromRow E.User where
-                            fromRow = E.User <$> field <*> field <*> field <*> field
+-- instance FromRow E.Users where
+--                             fromRow = E.Users <$> field <*> field <*> field <*> field <*> field <*> field <*> field  <*> field <*> field
 
                     -- Подключение
 
@@ -200,20 +200,32 @@ instance FromRow E.User where
 --      здесь отправляю по частям
         
        
-dd' :: IO Int64
-dd'  = do
-                let q = "INSERT INTO author * values (?)"
-                let s = Author 3 "dfsd" 1
-                conn <- connectPostgreSQL "host='localhost' port=5431 dbname='hblog'" 
-                i <- execute conn q s 
-                return i
-
-
-
-
+-- dd' :: IO Int64
+-- dd'  = do
+--                 let q = "INSERT INTO author (id, description ,user_id) values (?,?,?)"
+--                 let s = Author 4 "dfsd" 1
+--                 conn <- connectPostgreSQL "host='localhost' port=5431 dbname='hblog'" 
+--                 i <- execute conn q s 
+--                 return i
+-- по сущностям
 
                                     -- модифицировать
+-- dd :: IO Int64
+-- dd  = do
+--                 let q = "UPDATE author SET id = (?), description = (?) ,user_id = (?) where id = 3;"
+--                 let s = Author 5 "dfsdhjhfssd" 1
+--                 conn <- connectPostgreSQL "host='localhost' port=5431 dbname='hblog'" 
+--                 i <- execute conn q s 
+--                 return i
 
                                     -- удалить
+
+-- dd :: IO Int64
+-- dd  = do
+--                 let q = "DELETE FROM author WHERE id = (?) and description = (?) and user_id = (?);"
+--                 let s = Author 5 "dfsdhjhfssd" 1
+--                 conn <- connectPostgreSQL "host='localhost' port=5431 dbname='hblog'" 
+--                 i <- execute conn q s 
+--                 return i
 
     -- :l Examples.ExamplePSQL

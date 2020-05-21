@@ -12,8 +12,11 @@ data Comment = Comment {
     -- ZonedTime,
     news_id_comments     :: Int,              
     users_id_comments    :: Int
-    } deriving (Show)
+    } deriving (Show, Generic)
 
 instance FromRow Comment where
     fromRow = Comment <$> field <*> field <*> field <*> field <*> field
-      
+            
+instance FromJSON Comment
+instance ToJSON Comment
+instance  ToRow Comment

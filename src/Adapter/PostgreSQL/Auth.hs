@@ -18,6 +18,9 @@ import Data.Either
 import Domain.ImportEntity as E
 
 
+                -- подключение к базе данных и конфигурация
+
+
 type PG r m = (Has State r, MonadReader r m, MonadIO m, MonadThrow m)
 
 type State = Pool Connection
@@ -53,27 +56,12 @@ withConn action = do
   pool <- asks getter
   liftIO . withResource pool $ \conn -> action conn
 
-
-
-instance FromField E.Login where
-    fromField field mb_bytestring = E.Login <$> fromField field mb_bytestring
-
-instance FromField E.Password where
-    fromField field mb_bytestring = E.Password <$> fromField field mb_bytestring
-                  
-
-instance FromRow E.UserId where
-    fromRow = E.UserId <$> field
-
-instance FromRow E.User where
-    fromRow = E.User <$> field <*> field <*> field <*> field
-
             ---  реализация авторизации
 
 -- findAuth                :: Login -> Password -> m (Maybe Auth) 
 
 findUser:: PG r m
-            => E.Login -> E.Password -> m (Maybe E.User)  
+            => E.Login -> E.Password -> m (Maybe E.Users)  
 findUser login pass = do
     let rawLogin = E.rawLogin login
         rawPassw = E.rawPassword pass
@@ -88,11 +76,11 @@ findUser login pass = do
 -- findUserIdByAuth      :: Auth -> m (Maybe UserId)
 
 findUserIdByAuth :: PG r m
-               => E.User -> m (Maybe E.UserId)           
-findUserIdByAuth (E.User login pass author admin) = do
+               => E.Users -> m (Maybe E.UserId)           
+findUserIdByAuth (E.Users _ _ _ login pass _ _ author admin) = do
   let rawLogin = E.rawLogin login
       rawPassw = E.rawPassword pass
-  result <- withConn $ \conn -> query conn qry (rawLogin, rawPassw, author, admin )
+  result <- withConn $ \conn -> query conn qry (rawLogin, rawPassw )
   return $ case result of
     [uId] -> Just uId
     _ -> Nothing

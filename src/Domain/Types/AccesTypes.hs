@@ -6,32 +6,72 @@ import Domain.Validation.Validation
 import Text.Regex.PCRE.Heavy
 import Control.Monad.Except
 import Katip
-import Data.Aeson
 import GHC.Generics
+import Database.PostgreSQL.Simple.FromField (FromField, fromField)
 
-data  User = User
-  { authLogin    :: Login
+
+data  Users = Users
+  { 
+    id_user      :: UserId
+  , name         :: String
+  , lastName     :: String
+  , authLogin    :: Login
   , authPassword :: Password
+  , avatar       :: String
+  , dataCreate   :: UTCTime
   , authAuthor   :: Bool
   , authAdmin    :: Bool
-  } deriving (Show, Eq)
+  } deriving (Show, Eq, Generic)
 
-  
+instance FromRow Users where
+  fromRow = Users <$> field <*> field <*> field <*> field <*> field <*> field <*> field <*> field <*> field
 
-newtype Login = Login { loginRaw :: Text } deriving (Show, Eq)
+instance FromJSON Users
+instance ToJSON Users
+instance  ToRow Users
+
+
+
+newtype Login = Login { loginRaw :: Text } deriving (Show, Eq, Generic)
 
 rawLogin :: Login -> Text
 rawLogin = loginRaw
 
-newtype Password = Password { passwordRaw :: Text } deriving (Show, Eq)
+instance FromField Login where
+    fromField field mb_bytestring = Login <$> fromField field mb_bytestring
+
+instance  ToField Login
+instance FromJSON Login
+instance ToJSON Login
+instance ToRow Login
+
+newtype Password = Password { passwordRaw :: Text } deriving (Show, Eq, Generic)
 
 rawPassword :: Password -> Text
 rawPassword = passwordRaw
 
+instance FromField Password where
+    fromField field mb_bytestring = Password <$> fromField field mb_bytestring
+
+instance  ToField Password
+instance FromJSON Password
+instance ToJSON Password
+instance  ToRow Password
+                  
 
 newtype UserId = UserId Int deriving (Generic, Show, Eq, Ord)
 
-instance ToJSON UserId where 
+instance FromField UserId where
+  fromField field mb_bytestring = UserId <$> fromField field mb_bytestring
+instance FromRow UserId where
+  fromRow = UserId <$> field
+
+instance FromJSON UserId
+instance ToJSON UserId
+instance  ToRow UserId
+instance ToField UserId
+
+
 
 type SessionId = Text
 
@@ -39,8 +79,8 @@ data LoginError = LoginError deriving (Show, Eq)
 
           
 class Monad m => SessionRepo m where
-    findUser                :: Login -> Password -> m (Maybe User)
-    findUserIdByUser        :: User -> m (Maybe UserId)
+    findUsers               :: Login -> Password -> m (Maybe Users)
+    findUserIdByUser        :: Users -> m (Maybe UserId)
     newSession              :: UserId -> m SessionId
     findUserIdBySessionId   :: SessionId -> m (Maybe UserId)
    
@@ -57,7 +97,7 @@ resolveSessionId = findUserIdBySessionId
           
 login :: (KatipContext m, SessionRepo m) => Login -> Password -> m (Either LoginError SessionId)
 login log pass = runExceptT $ do
-  resultFirst  <- lift $ findUser log pass
+  resultFirst  <- lift $ findUsers log pass
   case resultFirst of
     Nothing -> throwError LoginError
     Just auth -> do
