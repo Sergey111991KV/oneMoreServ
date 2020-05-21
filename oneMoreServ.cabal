@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 9c97fd5db9376c668cc8f0cbc07e330393f99fa0de6c846c51bdc064db82a6de
+-- hash: 48a2ba3c0ad6c1877719dd075f6ce64c5a975267c6b891e068cf6ced668e828a
 
 name:           oneMoreServ
 version:        0.1.0.0
@@ -31,8 +31,15 @@ library
       Adapter.PostgreSQL.Auth
       Domain.ImportEntity
       Domain.Types.AccesTypes
+      Domain.Types.Author
+      Domain.Types.Category
+      Domain.Types.Comment
+      Domain.Types.Draft
       Domain.Types.Imports
+      Domain.Types.News
+      Domain.Types.Teg
       Domain.Validation.Validation
+      Examples.ExamplePSQL
       Examples.Examples
       Lib
   other-modules:
@@ -45,6 +52,7 @@ library
     , aeson
     , base >=4.7 && <5
     , blaze-builder
+    , bytestring
     , classy-prelude
     , configurator
     , cookie
@@ -84,6 +92,7 @@ executable oneMoreServ-exe
     , aeson
     , base >=4.7 && <5
     , blaze-builder
+    , bytestring
     , classy-prelude
     , configurator
     , cookie
@@ -125,6 +134,7 @@ test-suite oneMoreServ-test
     , aeson
     , base >=4.7 && <5
     , blaze-builder
+    , bytestring
     , classy-prelude
     , configurator
     , cookie

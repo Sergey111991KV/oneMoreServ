@@ -18,13 +18,12 @@ run le state = runKatipContextT le () mempty . flip runReaderT state . unApp
 
 
 -- instance SessionRepo App where
---   newSession = M.newSession
---   findUserIdByAuth = M.findUserIdByAuth
---   findUserIdBySessionId = M.findUserIdBySessionId
-
+--   newSession = PG.newSession
+--   findUserIdByAuth = PG.findUserIdByAuth
+--   findUserIdBySessionId = PG.findUserIdBySessionId
 mainL :: IO ()
 mainL = do
-  print "new"
+    print "dsaf"
 -- mainL :: IO ()
 -- mainL = withKatip $ \le -> do 
 --   mState <- newTVarIO M.initialState
@@ -39,8 +38,8 @@ mainL = do
 
 -- action :: App ()
 -- action = do
---     let email = either undefined id $ mkLogin "sergey@test.com"
---         passw = either undefined id $ mkPassword "1234ABCDefgh"
+--     let email = either undefined id $ mkLogin "oleg@test.com"
+--         passw = either undefined id $ mkPassword "5678ABCDefgh"
 --         auth = Auth email passw Admins
 --     session <-  login auth
 --     case session of

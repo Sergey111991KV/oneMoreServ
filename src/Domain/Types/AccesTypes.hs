@@ -9,13 +9,14 @@ import Katip
 import Data.Aeson
 import GHC.Generics
 
-data Auth = Auth
+data  User = User
   { authLogin    :: Login
   , authPassword :: Password
   , authAuthor   :: Bool
   , authAdmin    :: Bool
   } deriving (Show, Eq)
 
+  
 
 newtype Login = Login { loginRaw :: Text } deriving (Show, Eq)
 
@@ -38,8 +39,8 @@ data LoginError = LoginError deriving (Show, Eq)
 
           
 class Monad m => SessionRepo m where
-    findAuth                :: Login -> Password -> m (Maybe Auth)
-    findUserIdByAuth        :: Auth -> m (Maybe UserId)
+    findUser                :: Login -> Password -> m (Maybe User)
+    findUserIdByUser        :: User -> m (Maybe UserId)
     newSession              :: UserId -> m SessionId
     findUserIdBySessionId   :: SessionId -> m (Maybe UserId)
    
@@ -56,11 +57,11 @@ resolveSessionId = findUserIdBySessionId
           
 login :: (KatipContext m, SessionRepo m) => Login -> Password -> m (Either LoginError SessionId)
 login log pass = runExceptT $ do
-  resultFirst  <- lift $ findAuth log pass
+  resultFirst  <- lift $ findUser log pass
   case resultFirst of
     Nothing -> throwError LoginError
     Just auth -> do
-      resultSecond <- lift $ findUserIdByAuth auth
+      resultSecond <- lift $ findUserIdByUser auth
       case resultSecond of
         Nothing -> throwError LoginError
         Just uId -> withUserIdContext uId . lift $ newSession uId

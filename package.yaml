@@ -49,7 +49,7 @@ dependencies:
 - string-random
 - hedis
 - MissingH
-
+- bytestring
 
 default-extensions:
 - NoImplicitPrelude
