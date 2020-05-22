@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 48a2ba3c0ad6c1877719dd075f6ce64c5a975267c6b891e068cf6ced668e828a
+-- hash: ece20385383c4a95d47fd4d1fd75967ab81dba395b264b9a8684bc44d5148e16
 
 name:           oneMoreServ
 version:        0.1.0.0
@@ -29,12 +29,19 @@ library
   exposed-modules:
       Adapter.InMemory.Auth
       Adapter.PostgreSQL.Auth
+      Adapter.PostgreSQL.CommonService
       Domain.ImportEntity
+      Domain.ImportService
+      Domain.Service.CommonService
+      Domain.Service.FilterService
+      Domain.Service.SearchInService
+      Domain.Service.SortedOfService
       Domain.Types.AccesTypes
       Domain.Types.Author
       Domain.Types.Category
       Domain.Types.Comment
       Domain.Types.Draft
+      Domain.Types.Errors
       Domain.Types.Imports
       Domain.Types.News
       Domain.Types.Teg
