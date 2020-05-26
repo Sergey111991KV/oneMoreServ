@@ -8,6 +8,6 @@ import Katip
 
 import Domain.Service.CommonService 
 
-class CommonService a => SearchIn a where
-    inContent :: a -> [a]   -- API новостей должно поддерживать поиск по строке, которая может быть найдена либо в текстовом контенте,
-    inEntyty  :: a -> [a]   --  либо в имени автора, либо в названии категории/тега
+class CommonService m  => SearchIn m  where
+    inContent :: a -> m [a]   -- API новостей должно поддерживать поиск по строке, которая может быть найдена либо в текстовом контенте,
+    inEntyty  :: a -> m [a]   --  либо в имени автора, либо в названии категории/тега

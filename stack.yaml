@@ -43,6 +43,8 @@ extra-deps:
 - string-random-0.1.0.0
 - digestive-functors-0.8.4.0
 - digestive-functors-aeson-1.1.27
+- digestive-functors-blaze-0.6.2.0
+- digestive-functors-scotty-0.2.0.2
 - postgresql-simple-migration-0.1.15.0
 - hedis-0.12.13
 - MissingH-1.4.3.0

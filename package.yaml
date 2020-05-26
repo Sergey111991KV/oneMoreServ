@@ -34,6 +34,8 @@ dependencies:
 - blaze-builder
 - digestive-functors
 - digestive-functors-aeson
+- digestive-functors-blaze
+- digestive-functors-scotty
 - postgresql-simple
 - postgresql-libpq >= 0.9.4.2
 - time
@@ -64,6 +66,8 @@ default-extensions:
 - TypeFamilies
 - AllowAmbiguousTypes 
 - DeriveGeneric
+- MultiParamTypeClasses
+- ScopedTypeVariables
 
 
 library:

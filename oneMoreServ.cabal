@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: ece20385383c4a95d47fd4d1fd75967ab81dba395b264b9a8684bc44d5148e16
+-- hash: 1caf9eb66f9cee5693d7492520b3acb4b061201d3ed39894f1339cc2394dff67
 
 name:           oneMoreServ
 version:        0.1.0.0
@@ -27,9 +27,16 @@ source-repository head
 
 library
   exposed-modules:
+      Adapter.HTTP.API.CommonService
+      Adapter.HTTP.Common
+      Adapter.HTTP.Main
       Adapter.InMemory.Auth
       Adapter.PostgreSQL.Auth
+      Adapter.PostgreSQL.CommonPostgres
       Adapter.PostgreSQL.CommonService
+      Adapter.PostgreSQL.CommonService.AuthorCommon
+      Adapter.PostgreSQL.CommonService.ImportCommon
+      Adapter.PostgreSQL.ImportPostgres
       Domain.ImportEntity
       Domain.ImportService
       Domain.Service.CommonService
@@ -53,7 +60,7 @@ library
       Paths_oneMoreServ
   hs-source-dirs:
       src
-  default-extensions: NoImplicitPrelude OverloadedStrings QuasiQuotes GeneralizedNewtypeDeriving ConstraintKinds FlexibleContexts TemplateHaskell ExistentialQuantification RecordWildCards TypeFamilies AllowAmbiguousTypes DeriveGeneric
+  default-extensions: NoImplicitPrelude OverloadedStrings QuasiQuotes GeneralizedNewtypeDeriving ConstraintKinds FlexibleContexts TemplateHaskell ExistentialQuantification RecordWildCards TypeFamilies AllowAmbiguousTypes DeriveGeneric MultiParamTypeClasses ScopedTypeVariables
   build-depends:
       MissingH
     , aeson
@@ -66,6 +73,8 @@ library
     , data-has
     , digestive-functors
     , digestive-functors-aeson
+    , digestive-functors-blaze
+    , digestive-functors-scotty
     , exceptions
     , hedis
     , http-types
@@ -92,7 +101,7 @@ executable oneMoreServ-exe
       Paths_oneMoreServ
   hs-source-dirs:
       app
-  default-extensions: NoImplicitPrelude OverloadedStrings QuasiQuotes GeneralizedNewtypeDeriving ConstraintKinds FlexibleContexts TemplateHaskell ExistentialQuantification RecordWildCards TypeFamilies AllowAmbiguousTypes DeriveGeneric
+  default-extensions: NoImplicitPrelude OverloadedStrings QuasiQuotes GeneralizedNewtypeDeriving ConstraintKinds FlexibleContexts TemplateHaskell ExistentialQuantification RecordWildCards TypeFamilies AllowAmbiguousTypes DeriveGeneric MultiParamTypeClasses ScopedTypeVariables
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       MissingH
@@ -106,6 +115,8 @@ executable oneMoreServ-exe
     , data-has
     , digestive-functors
     , digestive-functors-aeson
+    , digestive-functors-blaze
+    , digestive-functors-scotty
     , exceptions
     , hedis
     , http-types
@@ -134,7 +145,7 @@ test-suite oneMoreServ-test
       Paths_oneMoreServ
   hs-source-dirs:
       test
-  default-extensions: NoImplicitPrelude OverloadedStrings QuasiQuotes GeneralizedNewtypeDeriving ConstraintKinds FlexibleContexts TemplateHaskell ExistentialQuantification RecordWildCards TypeFamilies AllowAmbiguousTypes DeriveGeneric
+  default-extensions: NoImplicitPrelude OverloadedStrings QuasiQuotes GeneralizedNewtypeDeriving ConstraintKinds FlexibleContexts TemplateHaskell ExistentialQuantification RecordWildCards TypeFamilies AllowAmbiguousTypes DeriveGeneric MultiParamTypeClasses ScopedTypeVariables
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       MissingH
@@ -148,6 +159,8 @@ test-suite oneMoreServ-test
     , data-has
     , digestive-functors
     , digestive-functors-aeson
+    , digestive-functors-blaze
+    , digestive-functors-scotty
     , exceptions
     , hedis
     , http-types

@@ -16,45 +16,46 @@ import Data.Maybe
 import Data.Either
 
 import Domain.ImportEntity as E
+import Adapter.PostgreSQL.CommonPostgres
 
 
                 -- подключение к базе данных и конфигурация
 
 
-type PG r m = (Has State r, MonadReader r m, MonadIO m, MonadThrow m)
+-- type PG r m = (Has State r, MonadReader r m, MonadIO m, MonadThrow m)
 
-type State = Pool Connection
+-- type State = Pool Connection
 
-data Config = Config
-  { configUrl :: ByteString
-  , configStripeCount :: Int
-  , configMaxOpenConnPerStripe :: Int
-  , configIdleConnTimeout :: NominalDiffTime
-  }
+-- data Config = Config
+--   { configUrl :: ByteString
+--   , configStripeCount :: Int
+--   , configMaxOpenConnPerStripe :: Int
+--   , configIdleConnTimeout :: NominalDiffTime
+--   }
 
-withPool :: Config -> (State -> IO a) -> IO a
-withPool cfg action =
-        bracket initPool cleanPool action
-        where
-          initPool = createPool openConn closeConn
-                      (configStripeCount cfg)
-                      (configIdleConnTimeout cfg)
-                      (configMaxOpenConnPerStripe cfg)
-          cleanPool = destroyAllResources
-          openConn = connectPostgreSQL (configUrl cfg)
-          closeConn = close
+-- withPool :: Config -> (State -> IO a) -> IO a
+-- withPool cfg action =
+--         bracket initPool cleanPool action
+--         where
+--           initPool = createPool openConn closeConn
+--                       (configStripeCount cfg)
+--                       (configIdleConnTimeout cfg)
+--                       (configMaxOpenConnPerStripe cfg)
+--           cleanPool = destroyAllResources
+--           openConn = connectPostgreSQL (configUrl cfg)
+--           closeConn = close
 
-withState  ::  Config  -> ( State  ->  IO  a ) ->  IO  a
-withState cfg action =
-    withPool cfg $ \state -> do
-        -- migrate state  --- можно добавлять дополнительные действия не меняя интерфейс главного действия withPool
-        action state
+-- withState  ::  Config  -> ( State  ->  IO  a ) ->  IO  a
+-- withState cfg action =
+--     withPool cfg $ \state -> do
+--         -- migrate state  --- можно добавлять дополнительные действия не меняя интерфейс главного действия withPool
+--         action state
 
 
-withConn :: PG r m => (Connection -> IO a) -> m a
-withConn action = do
-  pool <- asks getter
-  liftIO . withResource pool $ \conn -> action conn
+-- withConn :: PG r m => (Connection -> IO a) -> m a
+-- withConn action = do
+--   pool <- asks getter
+--   liftIO . withResource pool $ \conn -> action conn
 
             ---  реализация авторизации
 
@@ -73,11 +74,11 @@ findUser login pass = do
         qry = "SELECT id FROM user WHERE login = login and password = pass"
 
 
--- findUserIdByAuth      :: Auth -> m (Maybe UserId)
+-- findUserIdByUser      :: Auth -> m (Maybe UserId)
 
-findUserIdByAuth :: PG r m
+findUserIdByUser :: PG r m
                => E.Users -> m (Maybe E.UserId)           
-findUserIdByAuth (E.Users _ _ _ login pass _ _ author admin) = do
+findUserIdByUser (E.Users _ _ _ login pass _ _ author admin) = do
   let rawLogin = E.rawLogin login
       rawPassw = E.rawPassword pass
   result <- withConn $ \conn -> query conn qry (rawLogin, rawPassw )
@@ -94,12 +95,12 @@ findUserIdByAuth (E.Users _ _ _ login pass _ _ author admin) = do
 
 --     newSession            :: UserId -> m SessionId
 
--- newSession :: PG r m
---                => E.UserId -> m E.SessionId          
--- newSession uId = do
---         result <- withConn $ \conn -> query conn qry 
+newSession :: PG r m
+               => E.UserId -> m E.SessionId          
+newSession = undefined
 
 
 
 --     findUserIdBySessionId   :: SessionId -> m (Maybe UserId)
-
+findUserIdBySessionId   :: SessionId -> m (Maybe UserId)
+findUserIdBySessionId = undefined

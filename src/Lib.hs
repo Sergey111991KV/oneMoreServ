@@ -3,7 +3,8 @@ module Lib
     ) where
 
 -- import qualified Adapter.InMemory.Auth as M
-import qualified Adapter.PostgreSQL.Auth as PG
+import qualified Adapter.PostgreSQL.ImportPostgres as PG
+import Domain.ImportService
 import Domain.ImportEntity
 import ClassyPrelude
 import Control.Monad.Catch (MonadThrow, MonadCatch)
@@ -17,10 +18,19 @@ run :: LogEnv -> State -> App a -> IO a
 run le state = runKatipContextT le () mempty . flip runReaderT state . unApp
 
 
--- instance SessionRepo App where
---   newSession = PG.newSession
---   findUserIdByAuth = PG.findUserIdByAuth
---   findUserIdBySessionId = PG.findUserIdBySessionId
+instance SessionRepo App where
+  newSession = PG.newSession
+  findUserIdByUser = PG.findUserIdByUser
+  findUserIdBySessionId = PG.findUserIdBySessionId
+
+-- instance CommonService App where
+--       create  =   PG.create
+--       editing =   PG.editing
+--       getAll  =   PG.getAll
+--       getOne  =   PG.getOne
+--       remove  =   PG.remove
+
+
 mainL :: IO ()
 mainL = do
     print "dsaf"

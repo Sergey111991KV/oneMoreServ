@@ -1,53 +1,71 @@
 module Domain.Service.CommonService where
 
 import ClassyPrelude
-import Domain.ImportEntity
+import qualified Domain.ImportEntity as E
 import Data.Time
 import Control.Monad.Except
 import Katip
 
+--  data Category = E.Category1 | E.Category2 | E.Category3
+data Category = CatCategory1 E.Category1 | CatCategory2 E.Category2 | CatCategory3 E.Category3
+data Entity   = 
+    EntAuthor   E.Author   | 
+    EntCategory Category   | 
+    EntComment  E.Comment  | 
+    EntDraft    E.Draft    |
+    EntNews     E.News     | 
+    EntUsers    E.Users    | 
+    EntTeg      E.Teg
+   -- -- Category | E.Author | E.Comment | E.Draft | E.News | E.Users | E.Teg
 
-class CommonService a where
-    create  :: Users -> Maybe m -> Either Error m
-    editing :: Users -> m -> Either Error m
-    getAll  :: Users -> Either Error [m]
-    getOne  :: Users ->  Int -> Either Error  m
-    remove  :: Users ->  m -> Either Error ()
+-- data family Entity a
+-- data instance Entity Author = WrapAuthor Author
+
+-- returnEntity :: Entity -> Entity
+-- returnEntity (Nonempt (E.Author xx dd rr)) = Nonempt (E.Author (xx + 1) dd (rr + 1))
 
 
-class  CategoryService a where
-    allNestedCategory  :: a -> [a]
-    allUpCategory      :: a -> [a]
-    allCategory        :: a -> [a]
+class Monad m =>  CommonService m  where
+    create  :: Bool -> Maybe Entity  -> m (Either E.Error Entity )
+    editing :: Bool -> Entity -> m (Either E.Error Entity)
+    getAll  :: Bool -> String -> m (Either E.Error [Entity])
+    getOne  :: Bool -> String -> Int -> m (Either E.Error  Entity)
+    remove  :: Bool -> Entity -> m (Either E.Error ())
+
+-- class Monad m =>  CommonService m  where
+--     create  :: Bool -> Maybe (Entity a) -> m (Either Error (Entity a))
+--     editing :: Bool -> (Entity a) -> m (Either Error (Entity a))
+--     getAll  :: Bool -> String -> m (Either Error [(Entity a)])
+--     getOne  :: Bool -> String -> Int -> m (Either Error  (Entity a))
+--     remove  :: Bool -> (Entity a) -> m (Either Error ())
+
+
+class Monad m =>  CategoryService m where
+    allNestedCategory  :: Category ->  m [Category]
+    allUpCategory      :: Category -> m [Category]
+    allCategory        :: Category -> m [Category]
     
--- instance CategoryService Category1 where
-   
 
--- instance CategoryService Category2 where
+-- class CategoryForForall a where
 
-    
--- instance CategoryService Category3 where
-   
+-- instance CategoryForForall Category1 where
+-- instance CategoryForForall Category2 where
+-- instance CategoryForForall Category3 where
+              
 
-instance CategoryService Category where
-
-
--- instance CommonService Author where
-
--- instance CommonService Category where
-
--- instance CommonService Comment where
-
--- instance CommonService Draft where
-                    
--- instance CommonService News where
-                    
--- instance CommonService Teg where
-                    
--- instance CommonService Users where
-
-instance CommonService Entity where
+-- class EntityForForall a where
+  
+-- instance EntityForForall Category where
+-- instance EntityForForall Author where
+-- instance EntityForForall Comment where
+-- instance EntityForForall Draft where
+-- instance EntityForForall News where
+-- instance EntityForForall Teg where
+-- instance EntityForForall Users where
 
 
-data Category = forall a. CategoryService a =>  Category a
-data Entity   = forall a. CommonService a =>  Entity a
+
+-- data Category = forall a. CategoryForForall  =>  Category a
+-- data Entity   = forall a. EntityForForall  =>  Entity a
+
+-- data family Family a
