@@ -53,13 +53,12 @@ create True (Just (S.EntCategory (S.CatCategory1 (E.Category1 idCF text))))  = d
 -- EntTeg      E.Teg
 -- create True (Just (S.Entity a))  = do
 --     return $ Right (S.Entity a)
--- -- create True (Just (S.Entity (x)))  = do
+-- create True (Just (S.Entity (x)))  = do
     
 --     return $ Right (S.Entity(E.Author 22 "324" 33 ))
 -- create True (Just (S.Entity(x)))  = do
 --     case x of 
 --             E.Author 22 "324" 33 -> return $ Right (S.Entity(E.Author 22 "324" 33 ))
-    
     -- return $ Right (S.Entity(E.Author 22 "324" 33 ))
 -- create True (Just (E.Author x y z)) = do
 --     return $ Right (S.Entity $ (E.Author x y z))

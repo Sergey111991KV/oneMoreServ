@@ -8,6 +8,7 @@ import Control.Monad.Except
 import Katip
 import GHC.Generics
 import Database.PostgreSQL.Simple.FromField (FromField, fromField)
+import Text.Regex.PCRE.Heavy
 
 
 data  Users = Users
@@ -28,7 +29,7 @@ instance FromRow Users where
 
 instance FromJSON Users
 instance ToJSON Users
-instance  ToRow Users
+-- instance  ToRow Users
 
 
 
@@ -40,7 +41,7 @@ rawLogin = loginRaw
 instance FromField Login where
     fromField field mb_bytestring = Login <$> fromField field mb_bytestring
 
-instance  ToField Login
+-- instance  ToField Login
 instance FromJSON Login
 instance ToJSON Login
 instance ToRow Login
@@ -53,13 +54,13 @@ rawPassword = passwordRaw
 instance FromField Password where
     fromField field mb_bytestring = Password <$> fromField field mb_bytestring
 
-instance  ToField Password
+-- instance  ToField Password
 instance FromJSON Password
 instance ToJSON Password
 instance  ToRow Password
                   
 
-newtype UserId = UserId Int deriving (Generic, Show, Eq, Ord)
+newtype UserId = UserId {rawUserId :: Int} deriving (Generic, Show, Eq, Ord)
 
 instance FromField UserId where
   fromField field mb_bytestring = UserId <$> fromField field mb_bytestring
@@ -69,11 +70,30 @@ instance FromRow UserId where
 instance FromJSON UserId
 instance ToJSON UserId
 instance  ToRow UserId
-instance ToField UserId
+
+instance ToField UserId where
+  toField ip = toField $ rawUserId ip
+
+ 
 
 
 
-type SessionId = Text
+newtype SessionId = SessionId { sessionRaw :: Text } deriving (Generic, Show, Eq, Ord)
+
+rawSession :: SessionId -> Text
+rawSession = sessionRaw
+
+instance FromField SessionId where
+  fromField field mb_bytestring = SessionId <$> fromField field mb_bytestring
+instance FromRow SessionId where
+  fromRow = SessionId <$> field
+
+instance FromJSON SessionId
+instance ToJSON SessionId
+instance  ToRow SessionId
+instance ToField SessionId where
+  toField ip = toField $ sessionRaw ip
+
 
 data LoginError = LoginError deriving (Show, Eq)
 
@@ -123,6 +143,11 @@ login log pass = runExceptT $ do
 --   | PasswordValidationErrMustContainUpperCase
 --   | PasswordValidationErrMustContainLowerCase
 --   | PasswordValidationErrMustContainNumber
+mkSessionId :: Text -> Either [ErrMsg] SessionId
+mkSessionId =  validate SessionId 
+                  [
+                    regexMatches [re|\d|] "Something was wrong in sessionId"
+                  ]
 
 mkLogin :: Text -> Either [ErrMsg] Login
 mkLogin =

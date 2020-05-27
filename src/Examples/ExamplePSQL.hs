@@ -21,48 +21,130 @@ import qualified Data.ByteString as B
 
 
 
-type PG r m = (Has State r, MonadReader r m, MonadIO m, MonadThrow m)
+-- type PG r m = (Has State r, MonadReader r m, MonadIO m, MonadThrow m)
 
-type State = Pool Connection
+-- type State = Pool Connection
 
-data Config = Config
-  { configUrl :: ByteString
-  , configStripeCount :: Int
-  , configMaxOpenConnPerStripe :: Int
-  , configIdleConnTimeout :: NominalDiffTime
-  }
+-- data Config = Config
+--   { configUrl :: ByteString
+--   , configStripeCount :: Int
+--   , configMaxOpenConnPerStripe :: Int
+--   , configIdleConnTimeout :: NominalDiffTime
+--   }
 
-withPool :: Config -> (State -> IO a) -> IO a
-withPool cfg action =
-        bracket initPool cleanPool action
-        where
-          initPool = createPool openConn closeConn
-                      (configStripeCount cfg)
-                      (configIdleConnTimeout cfg)
-                      (configMaxOpenConnPerStripe cfg)
-          cleanPool = destroyAllResources
-          openConn = connectPostgreSQL (configUrl cfg)
-          closeConn = close
+-- withPool :: Config -> (State -> IO a) -> IO a
+-- withPool cfg action =
+--         bracket initPool cleanPool action
+--         where
+--           initPool = createPool openConn closeConn
+--                       (configStripeCount cfg)
+--                       (configIdleConnTimeout cfg)
+--                       (configMaxOpenConnPerStripe cfg)
+--           cleanPool = destroyAllResources
+--           openConn = connectPostgreSQL (configUrl cfg)
+--           closeConn = close
 
-withState  ::  Config  -> ( State  ->  IO  a ) ->  IO  a
-withState cfg action =
-    withPool cfg $ \state -> do
-        -- migrate state  --- можно добавлять дополнительные действия не меняя интерфейс главного действия withPool
-        action state
+-- withState  ::  Config  -> ( State  ->  IO  a ) ->  IO  a
+-- withState cfg action =
+--     withPool cfg $ \state -> do
+--         -- migrate state  --- можно добавлять дополнительные действия не меняя интерфейс главного действия withPool
+--         action state
 
 
-withConn :: PG r m => (Connection -> IO a) -> m a
-withConn action = do
-  pool <- asks getter
-  liftIO . withResource pool $ \conn -> action conn
+-- withConn :: PG r m => (Connection -> IO a) -> m a
+-- withConn action = do
+--   pool <- asks getter
+--   liftIO . withResource pool $ \conn -> action conn
 
-initState :: Config
-initState = Config {
-                      configUrl = "postgresql://localhost/hauth"
-                    , configStripeCount = 2
-                    , configMaxOpenConnPerStripe = 5
-                    , configIdleConnTimeout = 10
-                    }
+-- initState :: Config
+-- initState = Config {
+--                       configUrl = "localhost"
+--                     , configStripeCount = 2
+--                     , configMaxOpenConnPerStripe = 5
+--                     , configIdleConnTimeout = 10
+--                     }
+
+
+-- findUsers:: PG r m
+--             => E.Login -> E.Password -> m (Maybe E.Users)  
+-- findUsers login pass = do
+--     let rawLogin = E.rawLogin login
+--         rawPassw = E.rawPassword pass
+--     result <- withConn $ \conn -> query conn qry (rawLogin, rawPassw)
+--     return $ case result of
+--         [auth] -> Just auth
+--         _ -> Nothing
+--     where
+--         qry = "SELECT id FROM user WHERE login = login and password = pass"
+
+
+-- findUserIdByUser :: PG r m
+--                => E.Users -> m (Maybe E.UserId)           
+-- findUserIdByUser (E.Users _ _ _ login pass _ _ author admin) = do
+--   let rawLogin = E.rawLogin login
+--       rawPassw = E.rawPassword pass
+--   result <- withConn $ \conn -> query conn qry (rawLogin, rawPassw )
+--   return $ case result of
+--     [uId] -> Just uId
+--     _ -> Nothing
+--   where
+--     qry = "select id, is_email_verified \
+--           \from auths \
+--           \where email = ? and pass = crypt(?, pass)"
+
+
+
+-- newSession :: PG r m
+--                => E.UserId -> m E.SessionId          
+-- newSession idU = do
+--     sId <- liftIO $ stringRandomIO "[a-zA-Z0-9]{32}"
+--     result <- withConn $ \conn -> query conn qry (idU, sId )
+--     case result of
+--         [sId] -> return sId
+--         err -> throwString $ "Unexpected error: " <> show err
+--     where
+--     qry = "select id, is_email_verified \
+--           \from auths \
+--           \where email = ? and pass = crypt(?, pass)"
+
+
+
+-- findUserIdBySessionId :: PG r m
+--               => SessionId -> m (Maybe UserId)
+-- findUserIdBySessionId sId = do
+--     result <- withConn $ \conn -> query conn qry (sId)
+--     return $ case result of
+--         [uIdStr] -> Just uIdStr
+--         _        -> Nothing
+--     where
+--       qry = "select id, is_email_verified \
+--           \from auths \
+--           \where email = ? and pass = crypt(?, pass)"
+
+-- create  :: PG r m => Bool -> (Maybe S.Entity) -> m (Either E.Error S.Entity )
+-- -- create = undefined
+-- create False _      = return (Left E.AccessError)
+-- create True Nothing = return (Left E.DataError)
+-- create True (Just (S.EntAuthor (E.Author idA text idU)))  = do
+--         result <- withConn $ \conn -> query conn qry (idA, text, idU)
+--         return $ case result of
+--             _                          ->  Left E.DataError
+--             [(idA, text, idU)]         ->  Right (S.EntAuthor (E.Author idA text idU)) 
+--         where
+--                         qry = "insert into auths \
+--                               \(email, pass, email_verification_code, is_email_verified) \
+--                               \values (?, crypt(?, gen_salt('bf')), ?, 'f') returning id"
+-- create True (Just (S.EntCategory (S.CatCategory1 (E.Category1 idCF text))))  = do
+--         result <- withConn $ \conn -> query conn qry (idCF, text)
+--         return $ case result of
+--             _                          ->  Left E.DataError
+--             [(idCF, text)]             ->  Right (S.EntCategory ( S.CatCategory1 (E.Category1 idCF text)))
+--         where
+--                         qry = "insert into auths \
+--                               \(email, pass, email_verification_code, is_email_verified) \
+--                               \values (?, crypt(?, gen_salt('bf')), ?, 'f') returning id"
+    
+
 
 -- instance FromField E.Login where
 --                             fromField field mb_bytestring = E.Login <$> fromField field mb_bytestring

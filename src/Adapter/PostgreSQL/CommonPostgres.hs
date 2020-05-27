@@ -41,7 +41,7 @@ withPool cfg action =
 withState  ::  Config  -> ( State  ->  IO  a ) ->  IO  a
 withState cfg action =
     withPool cfg $ \state -> do
-        -- migrate state  --- можно добавлять дополнительные действия не меняя интерфейс главного действия withPool
+        -- migrate state  можно добавлять дополнительные действия не меняя интерфейс главного действия withPool
         action state
 
 withConn :: PG r m => (Connection -> IO a) -> m a

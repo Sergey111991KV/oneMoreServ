@@ -9,20 +9,22 @@ import Domain.ImportEntity
 import ClassyPrelude
 import Control.Monad.Catch (MonadThrow, MonadCatch)
 import Katip
+import Adapter.HTTP.Main as HTTP
 
 type State = (PG.State)
 newtype App a = App
   { unApp :: ReaderT State (KatipContextT IO) a
   } deriving (Applicative, Functor, Monad, MonadReader State, MonadIO, KatipContext, Katip, MonadThrow)
+
 run :: LogEnv -> State -> App a -> IO a
 run le state = runKatipContextT le () mempty . flip runReaderT state . unApp
 
 
 instance SessionRepo App where
-  newSession = PG.newSession
-  findUserIdByUser = PG.findUserIdByUser
+  newSession            = PG.newSession
+  findUserIdByUser      = PG.findUserIdByUser
   findUserIdBySessionId = PG.findUserIdBySessionId
-
+  findUsers             = PG.findUsers
 -- instance CommonService App where
 --       create  =   PG.create
 --       editing =   PG.editing
@@ -33,28 +35,9 @@ instance SessionRepo App where
 
 mainL :: IO ()
 mainL = do
-    print "dsaf"
--- mainL :: IO ()
--- mainL = withKatip $ \le -> do 
---   mState <- newTVarIO M.initialState
---   PG.withState pgCfg $ \pgState -> run le (pgState, mState) action
---   where
---     pgCfg = PG.Config
---             { PG.configUrl = "postgresql://localhost/hauth"
---             , PG.configStripeCount = 2
---             , PG.configMaxOpenConnPerStripe = 5
---             , PG.configIdleConnTimeout = 10
---             }
-
--- action :: App ()
--- action = do
---     let email = either undefined id $ mkLogin "oleg@test.com"
---         passw = either undefined id $ mkPassword "5678ABCDefgh"
---         auth = Auth email passw Admins
---     session <-  login auth
---     case session of
---       Left err -> print "non found user"
---       Right s ->  print (s, authAccess auth)
+    withState $ \port le state -> do
+      let runner = run le state
+      HTTP.mainHTTP port runner
  
 
 withKatip :: (LogEnv -> IO a) -> IO a
@@ -65,3 +48,23 @@ withKatip app =
       logEnv <- initLogEnv "HAuth" "prod"
       stdoutScribe <- mkHandleScribe ColorIfTerminal stdout (permitItem InfoS) V2
       registerScribe "stdout" stdoutScribe defaultScribeSettings logEnv
+      
+      
+withState :: (Int -> LogEnv -> State -> IO ()) -> IO ()
+withState action = 
+  withKatip $ \le -> do
+    PG.withState pgCfg $ \pgState -> do
+          let state = pgState
+          action port le state
+  where
+    pgCfg = 
+      PG.Config 
+      -- "host='localhost' port=5431 dbname='hblog'" 
+      -- user = пароль = b host = localhost port = 5432 dbname = c sslmode = disable
+      -- " postgresql: // localhost: 5431 / postgres ""
+      { PG.configUrl = " host='localhost' port=5431 dbname='hblog'"
+      , PG.configStripeCount = 2
+      , PG.configMaxOpenConnPerStripe = 5
+      , PG.configIdleConnTimeout = 10
+      }
+    port = 3000
