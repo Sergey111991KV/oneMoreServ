@@ -104,3 +104,6 @@ newSession = undefined
 --     findUserIdBySessionId   :: SessionId -> m (Maybe UserId)
 findUserIdBySessionId   :: SessionId -> m (Maybe UserId)
 findUserIdBySessionId = undefined
+
+
+
