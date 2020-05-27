@@ -28,8 +28,7 @@ routes = do
     -- getOne  :: Bool -> String -> Int -> m (Either E.Error  Entity)
     -- remove  :: Bool -> Entity -> m (Either E.Error ())
 
-
---   -- register
+-- register
 --   post "/api/auth/register" $ do
 --     input <- parseAndValidateJSON authForm
 --     domainResult <- lift $ register input
@@ -51,7 +50,7 @@ routes = do
 --       Right _ ->
 --         return ()
 
---   -- login
+   -- login
 --   post "/api/auth/login" $ do
 --     input <- parseAndValidateJSON authForm
 --     domainResult <- lift $ login input
@@ -66,7 +65,7 @@ routes = do
 --         setSessionIdInCookie sId
 --         return ()
 
---   -- get user
+  -- get user
 --   get "/api/users" $ do
 --     userId <- reqCurrentUserId
 --     mayEmail <- lift $ getUser userId
@@ -76,7 +75,7 @@ routes = do
 --       Just email ->
 --         json $ rawEmail email
 
--- -- * Forms
+-- * Forms
 
 -- verifyEmailForm :: (Monad m) => DF.Form [Text] m VerificationCode
 -- verifyEmailForm = DF.text Nothing

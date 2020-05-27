@@ -6,7 +6,6 @@ import Data.Time
 import Control.Monad.Except
 import Katip
 
---  data Category = E.Category1 | E.Category2 | E.Category3
 data Category = CatCategory1 E.Category1 | CatCategory2 E.Category2 | CatCategory3 E.Category3
 data Entity   = 
     EntAuthor   E.Author   | 
