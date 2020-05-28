@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: fa9f6fe79d53e01d6434d3e1abf9054b870078179860c1144b69be98d53364e0
+-- hash: 3b5dd8790a72a03bb5114ea1c22442c0e931bb5883a17008b25c4fce89a392f0
 
 name:           oneMoreServ
 version:        0.1.0.0
@@ -43,6 +43,7 @@ library
       Domain.Service.CommonService
       Domain.Service.FilterService
       Domain.Service.SearchInService
+      Domain.Service.SessionRepoService
       Domain.Service.SortedOfService
       Domain.Types.AccesTypes
       Domain.Types.Author

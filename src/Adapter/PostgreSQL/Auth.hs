@@ -4,9 +4,9 @@ import ClassyPrelude
 import Data.Pool
 -- import Database.PostgreSQL.Simple.Migration
 import Database.PostgreSQL.Simple
--- import Database.PostgreSQL.Simple.ToRow 
+import Database.PostgreSQL.Simple.ToRow 
 import Database.PostgreSQL.Simple.FromRow 
--- import Database.PostgreSQL.Simple.ToField 
+import Database.PostgreSQL.Simple.ToField 
 import Database.PostgreSQL.Simple.FromField
 import Data.Time
 import Control.Monad.Catch (MonadThrow, MonadCatch)
@@ -49,13 +49,12 @@ newSession :: PG r m
                => E.UserId -> m E.SessionId          
 newSession idU = do
     sId <- liftIO $ stringRandomIO "[a-zA-Z0-9]{32}"
-    let newId = 4 :: Int
-    result <- withConn $ \conn -> query conn qry (newId, sId, idU )
+    result <- withConn $ \conn -> query conn qry ( sId, idU )
     case result of
         [sId] -> return sId
         err -> throwString $ "Unexpected error: " <> show err
     where
-    qry = "INSERT INTO session (id, key ,user_id) values (?, ?,?)"
+    qry = "INSERT INTO session (key ,user_id) values (?,?)"
 
 
 
@@ -67,9 +66,45 @@ findUserIdBySessionId sId = do
         [uIdStr] -> Just uIdStr
         _        -> Nothing
     where
-      qry = "select id, is_email_verified \
-          \from auths \
-          \where email = ? and pass = crypt(?, pass)"
+      qry = "select user_id from session where id = ? "
 
 
 
+findAccessAdminByUserId :: PG r m
+                => UserId -> m (Maybe Bool)
+findAccessAdminByUserId uId = do
+    result <- withConn $ \conn -> query conn qry (uId)
+    return $ case result of
+        [access] -> Just access
+        _        -> Nothing
+    where
+      qry = "select admin from user_blog where id_user = ? "
+
+
+
+-- findAccessAuthorByUserId :: PG r m
+--                 => UserId -> m (Maybe Bool)
+-- findAccessAuthorByUserId uId = do
+--     result <- withConn $ \conn -> query conn qry (uId)
+--     return $ case result of
+--         [bool] -> Just bool
+--         _        -> Nothing
+--     where
+--       qry = "select id, is_email_verified \
+--           \from auths \
+--           \where email = ? and pass = crypt(?, pass)"
+
+
+
+
+-- -- instance FromRow Int where 
+-- --     fromRow = fromRow
+-- -- -- instance ToRow Bool
+
+
+
+-- instance FromField Password where
+-- -- instance  ToField Password
+-- instance FromJSON Password
+-- instance ToJSON Password
+-- instance  ToRow Password

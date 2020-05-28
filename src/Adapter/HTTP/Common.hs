@@ -14,7 +14,7 @@ import Data.Either
 import Domain.Validation.Validation
 
 import Domain.ImportEntity as E
-import Domain.ImportService 
+import Domain.ImportService as S
 
 toResult :: Either e a -> DF.Result e a
 toResult = either DF.Error DF.Success
@@ -58,7 +58,7 @@ setSessionIdInCookie sId = do
                   , setCookieSameSite = Just sameSiteLax
                   }
 
-getCurrentUserId :: (E.SessionRepo m, ScottyError e) => ActionT e m (Maybe UserId)
+getCurrentUserId :: (S.SessionRepo m, ScottyError e) => ActionT e m (Maybe UserId)
 getCurrentUserId = do
   -- let err :: Text = "Error of Get SessionId"
   maySessionId <- getCookie "sId"
@@ -71,7 +71,7 @@ getCurrentUserId = do
         Right  x    ->  lift $ (resolveSessionId x)
         -- newsId <- lift $
 
-reqCurrentUserId :: (E.SessionRepo m, ScottyError e) => ActionT e m UserId
+reqCurrentUserId :: (S.SessionRepo m, ScottyError e) => ActionT e m UserId
 reqCurrentUserId = do
   mayUserId <- getCurrentUserId
   case mayUserId of
