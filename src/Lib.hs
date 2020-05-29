@@ -21,10 +21,10 @@ run le state = runKatipContextT le () mempty . flip runReaderT state . unApp
 
 
 instance SessionRepo App where
-  newSession            = PG.newSession
-  findUserIdByUser      = PG.findUserIdByUser
-  findUserIdBySessionId = PG.findUserIdBySessionId
-  findUsers             = PG.findUsers
+  newSession              = PG.newSession
+  findUserIdByUser        = PG.findUserIdByUser
+  findUserIdBySessionId   = PG.findUserIdBySessionId
+  findUsers               = PG.findUsers
   findAccessAdminByUserId = PG.findAccessAdminByUserId
   -- findAccessAuthorByUserId = PG.findAccessAuthorByUserId
 -- instance CommonService App where
@@ -40,6 +40,7 @@ mainL = do
     withState $ \port le state -> do
       let runner = run le state
       HTTP.mainHTTP port runner
+    
  
 
 withKatip :: (LogEnv -> IO a) -> IO a

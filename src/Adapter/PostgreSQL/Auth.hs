@@ -30,7 +30,6 @@ findUsers login pass = do
     where
         qry = "SELECT * FROM user_blog WHERE login = (?) and password = (?)"
 
-
 findUserIdByUser :: PG r m
                => E.Users -> m (Maybe E.UserId)           
 findUserIdByUser (E.Users _ _ _ login pass _ _ author admin) = do
@@ -48,30 +47,49 @@ findUserIdByUser (E.Users _ _ _ login pass _ _ author admin) = do
 newSession :: PG r m
                => E.UserId -> m E.SessionId          
 newSession idU = do
-    sId <- liftIO $ stringRandomIO "[a-zA-Z0-9]{32}"
-    result <- withConn $ \conn -> query conn qry ( sId, idU )
+    deleteOldSession idU
+    insertNewSession idU
+    result <- withConn $ \conn -> query conn qry (idU )
     case result of
-        [sId] -> return sId
+        [sId] -> do
+            print $ sessionRaw sId
+            return sId
         err -> throwString $ "Unexpected error: " <> show err
     where
-    qry = "INSERT INTO session (key ,user_id) values (?,?)"
+    qry = "select key from session where user_id= ?"
 
 
+deleteOldSession :: PG r m
+                => E.UserId  -> m Int64 
+deleteOldSession idU  = do
+        result <- withConn $ \conn -> execute conn qry ( idU )
+        return result 
+        where
+            qry = "delete from session where user_id = ?"
+
+insertNewSession :: PG r m
+                => E.UserId  -> m Int64 
+insertNewSession  idU  = do
+    sId <- liftIO $ stringRandomIO "[a-zA-Z0-9]{32}"
+    result <- withConn $ \conn -> execute conn qry ( sId, idU )
+    return result 
+    where
+        qry = "INSERT INTO session (key ,user_id) values (?,?)"     
 
 findUserIdBySessionId :: PG r m
-              => SessionId -> m (Maybe UserId)
+              => E.SessionId -> m (Maybe E.UserId)
 findUserIdBySessionId sId = do
     result <- withConn $ \conn -> query conn qry (sId)
     return $ case result of
         [uIdStr] -> Just uIdStr
         _        -> Nothing
     where
-      qry = "select user_id from session where id = ? "
+      qry = "select user_id from session where key = ? "
 
 
 
 findAccessAdminByUserId :: PG r m
-                => UserId -> m (Maybe Bool)
+                => E.UserId -> m (Maybe Bool)
 findAccessAdminByUserId uId = do
     result <- withConn $ \conn -> query conn qry (uId)
     return $ case result of

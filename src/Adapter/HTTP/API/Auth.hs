@@ -10,6 +10,8 @@ import Adapter.HTTP.Common
 import Network.HTTP.Types.Status
 import Data.Aeson ()
 import Katip
+import qualified Text.Read as Text
+
 
 
                     -- AUTH FORM
@@ -30,7 +32,7 @@ passForm =
 routes :: ( ScottyError e, MonadIO m, KatipContext m, SessionRepo m)
           => ScottyT e m ()
 routes = do
-
+  
                     --  FROM FORM
 
         post "/api/auth/login" $ do
@@ -47,7 +49,7 @@ routes = do
 
                     -- PARAM
         
-        post "/api/login/:login/password/:password" $ do
+        get "/login/:login/:password" $ do
                 logins   :: Text   <-      param "login" 
                 password :: Text   <-       param "password" 
                 let log = mkLogin logins
@@ -72,22 +74,24 @@ routes = do
                                         json ("InvalidAuth" :: Text)
                                     Right sId -> do
                                         setSessionIdInCookie sId
+                                        print "setSessionIdInCookie"
                                         status status200
                                         return ()
                                        
                         -- EXAMPLE ACCESS AUTHORS AND ADMIN
 
-        get "/api/admin/:userId" $ do
-                uId   :: Int   <-      param "userId" 
-                let idUser = UserId uId
-                access <- lift $ findAccessAdminByUserId idUser
-                case access of
-                        Just acc -> do
-                            case acc of 
-                                True -> text "Доступ Админа"
-                                False -> text "Нет Доступа Админа"
-                        Nothing -> text "Пользователь с таким id не обнаружен"
-
+        get "/admin" $ do
+            userId <- reqCurrentUserId
+            print userId
+            access <- lift $ findAccessAdminByUserId userId
+            case access of
+                Just acc -> do
+                      case acc of 
+                            True -> json ( "Доступ Админа" :: Text)
+                            False -> json ( "Нет Доступа Админа" :: Text)
+                Nothing -> json ( "Пользователь с таким id не обнаружен" :: Text)
+    
+                        
                         
                 
                                  

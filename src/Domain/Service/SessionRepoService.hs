@@ -15,7 +15,7 @@ class Monad m => SessionRepo m where
     findUserIdBySessionId       :: SessionId -> m (Maybe UserId)
     findAccessAdminByUserId     :: UserId -> m (Maybe Bool)
     -- findAccessAuthorByUserId    :: UserId -> m (Maybe Bool)
-   
+    
 
             --- Katip
 
