@@ -8,10 +8,10 @@ import Network.HTTP.Types.Status
 import Data.Aeson ()
 import Katip
 
-import Adapter.HTTP.Common
+-- import Adapter.HTTP.Common
 
 import Domain.ImportEntity as E
-import Domain.ImportService
+import Domain.ImportService as S
 
 
 --     create  :: Maybe Entity  -> m (Either E.Error Entity )
@@ -20,9 +20,9 @@ import Domain.ImportService
 --     getOne  :: String -> Int -> m (Either E.Error  Entity)
 --     remove  :: Entity -> m (Either E.Error ())
 
--- routes :: ( ScottyError e, MonadIO m, KatipContext m, SessionRepo m)
---           => ScottyT e m ()
--- routes = do
+routes :: ( ScottyError e, MonadIO m, KatipContext m, SessionRepo m)
+          => ScottyT e m ()
+routes = undefined
 --         post "/api/create/login" $ do
 --                 inputLog  <- parseAndValidateJSON logForm
 --                 inputPass <- parseAndValidateJSON passForm
@@ -37,8 +37,17 @@ import Domain.ImportService
 
 
 
--- logForm :: (Monad m) => DF.Form [Text] m Login
--- logForm =
+logFormAuthor :: (Monad m) => DF.Form [Text] m E.Author 
+logFormAuthor = undefined
 --   "login" .: loginForm
 --   where
 --     loginForm = DF.validate (toResult . mkLogin) (DF.text Nothing)
+
+
+    -- EntAuthor   E.Author   | 
+    -- EntCategory Category   | 
+    -- EntComment  E.Comment  | 
+    -- EntDraft    E.Draft    |
+    -- EntNews     E.News     | 
+    -- EntUsers    E.Users    | 
+    -- EntTeg      E.Teg

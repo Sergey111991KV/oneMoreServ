@@ -2,16 +2,18 @@ module Adapter.HTTP.API.Auth where
 
 import ClassyPrelude
 import Web.Scotty.Trans
-import Domain.ImportEntity
-import Domain.ImportService
 import qualified Text.Digestive.Form as DF
 import Text.Digestive.Form ((.:))
-import Adapter.HTTP.Common
 import Network.HTTP.Types.Status
 import Data.Aeson ()
 import Katip
 import qualified Text.Read as Text
 
+import Adapter.HTTP.Common
+import Adapter.HTTP.API.Common
+
+import Domain.ImportEntity as E
+import Domain.ImportService as S
 
 
                     -- AUTH FORM

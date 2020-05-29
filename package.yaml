@@ -52,6 +52,9 @@ dependencies:
 - hedis
 - MissingH
 - bytestring
+- blaze-html
+- wai-middleware-static
+- warp
 
 default-extensions:
 - NoImplicitPrelude
