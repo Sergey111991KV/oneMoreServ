@@ -16,11 +16,11 @@ import Adapter.PostgreSQL.CommonService.ImportCommon as CSP
 
 
     
-create  :: PG r m => Bool -> (Maybe S.Entity) -> m (Either E.Error S.Entity )
+create  :: PG r m => (Maybe S.Entity) -> m (Either E.Error S.Entity )
 -- create = undefined
-create False _      = return (Left E.AccessError)
-create True Nothing = return (Left E.DataError)
-create True (Just (S.EntAuthor (E.Author idA text idU)))  = do
+create  _      = return (Left E.AccessError)
+create  Nothing = return (Left E.DataError)
+create  (Just (S.EntAuthor (E.Author idA text idU)))  = do
         result <- withConn $ \conn -> query conn qry (idA, text, idU)
         return $ case result of
             _                          ->  Left E.DataError
@@ -29,7 +29,7 @@ create True (Just (S.EntAuthor (E.Author idA text idU)))  = do
                         qry = "insert into auths \
                               \(email, pass, email_verification_code, is_email_verified) \
                               \values (?, crypt(?, gen_salt('bf')), ?, 'f') returning id"
-create True (Just (S.EntCategory (S.CatCategory1 (E.Category1 idCF text))))  = do
+create  (Just (S.EntCategory (S.CatCategory1 (E.Category1 idCF text))))  = do
         result <- withConn $ \conn -> query conn qry (idCF, text)
         return $ case result of
             _                          ->  Left E.DataError
@@ -38,8 +38,27 @@ create True (Just (S.EntCategory (S.CatCategory1 (E.Category1 idCF text))))  = d
                         qry = "insert into auths \
                               \(email, pass, email_verification_code, is_email_verified) \
                               \values (?, crypt(?, gen_salt('bf')), ?, 'f') returning id"
-    
-
+                              
+                              
+create  (Just (S.EntCategory (S.CatCategory2 (E.Category2 idCF text refId))))  = do
+        result <- withConn $ \conn -> query conn qry (idCF, text)
+        return $ case result of
+            _                          ->  Left E.DataError
+            [(idCF, text)]             ->  Right (S.EntCategory ( S.CatCategory1 (E.Category1 idCF text)))
+        where
+                        qry = "insert into auths \
+                              \(email, pass, email_verification_code, is_email_verified) \
+                              \values (?, crypt(?, gen_salt('bf')), ?, 'f') returning id"
+                              
+create  (Just (S.EntCategory (S.CatCategory3 (E.Category3 idCF text refId))))  = do
+        result <- withConn $ \conn -> query conn qry (idCF, text)
+        return $ case result of
+            _                          ->  Left E.DataError
+            [(idCF, text)]             ->  Right (S.EntCategory ( S.CatCategory1 (E.Category1 idCF text)))
+        where
+                        qry = "insert into auths \
+                              \(email, pass, email_verification_code, is_email_verified) \
+                              \values (?, crypt(?, gen_salt('bf')), ?, 'f') returning id"
 
 
 

@@ -9,7 +9,7 @@ import Domain.ImportEntity
 import ClassyPrelude
 import Control.Monad.Catch (MonadThrow, MonadCatch)
 import Katip
-import Adapter.HTTP.Main as HTTP
+import qualified Adapter.HTTP.Main as HTTP
 
 type State = (PG.State)
 newtype App a = App
@@ -26,6 +26,7 @@ instance SessionRepo App where
   findUserIdBySessionId   = PG.findUserIdBySessionId
   findUsers               = PG.findUsers
   findAccessAdminByUserId = PG.findAccessAdminByUserId
+  newUserId               = PG.newUserId
   -- findAccessAuthorByUserId = PG.findAccessAuthorByUserId
 -- instance CommonService App where
 --       create  =   PG.create
@@ -39,7 +40,7 @@ mainL :: IO ()
 mainL = do
     withState $ \port le state -> do
       let runner = run le state
-      HTTP.mainHTTP port runner
+      HTTP.mainALL port runner
     
  
 

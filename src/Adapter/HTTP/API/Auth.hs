@@ -37,7 +37,7 @@ routes = do
   
                     --  FROM FORM
 
-        post "/api/auth/login" $ do
+        post "/api/login" $ do
                 inputLog  <- parseAndValidateJSON logForm
                 inputPass <- parseAndValidateJSON passForm
                 domainResult <- lift $ login inputLog inputPass
@@ -51,7 +51,7 @@ routes = do
 
                     -- PARAM
         
-        get "/login/:login/:password" $ do
+        get "/api/login/:login/:password" $ do
                 logins   :: Text   <-      param "login" 
                 password :: Text   <-       param "password" 
                 let log = mkLogin logins
@@ -82,20 +82,35 @@ routes = do
                                        
                         -- EXAMPLE ACCESS AUTHORS AND ADMIN
 
-        get "/admin" $ do
+        get "/api/admin" $ do
             userId <- reqCurrentUserId
             print userId
             access <- lift $ findAccessAdminByUserId userId
+            print "im here"
             case access of
                 Just acc -> do
-                      case acc of 
-                            True -> json ( "Доступ Админа" :: Text)
-                            False -> json ( "Нет Доступа Админа" :: Text)
+                      
+                      -- print (textAccessAdmin acc)
+                      let bool = rawAccessAdmin acc
+                      print "aaaa"
+                      case bool of 
+                            True -> do
+                              print "What is fuck"
+                              json ( "Доступ Админа" :: Text)
+                            False -> do
+                                print "What is jjjjjj"
+                                json ( "Нет Доступа Админа" :: Text)
                 Nothing -> json ( "Пользователь с таким id не обнаружен" :: Text)
-    
-                        
-                        
+      
                 
+        get "/api/newUserId" $ do
+            nUId <- lift $ newUserId  
+            print "newUserId" 
+            case nUId of
+                Nothing -> do
+                  json ( "Ошибка в нахождении пользователя" :: Text)
+                Just i  -> do
+                  json (rawUserId i)
                                  
         -- post "/api/author/:userId" $ do
         --         uId   :: Int   <-      param "userId" 

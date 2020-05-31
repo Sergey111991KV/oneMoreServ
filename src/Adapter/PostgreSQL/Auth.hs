@@ -89,16 +89,24 @@ findUserIdBySessionId sId = do
 
 
 findAccessAdminByUserId :: PG r m
-                => E.UserId -> m (Maybe Bool)
+                => E.UserId -> m (Maybe AccessAdmin)
 findAccessAdminByUserId uId = do
     result <- withConn $ \conn -> query conn qry (uId)
     return $ case result of
         [access] -> Just access
         _        -> Nothing
     where
-      qry = "select admin from user_blog where id_user = ? "
+      qry = "select admini from user_blog where id_user = ? "
 
 
+newUserId :: PG r m =>  m (Maybe UserId)
+newUserId = do 
+    result <- withConn $ \conn -> query_ conn qry 
+    return $ case result of
+        [nUid]   -> Just nUid
+        _        -> Nothing
+    where
+      qry = "select (max(id_user) +1) from user_blog "
 
 -- findAccessAuthorByUserId :: PG r m
 --                 => UserId -> m (Maybe Bool)

@@ -2,14 +2,14 @@ module Adapter.HTTP.Common where
 
 import ClassyPrelude
 import Web.Scotty.Trans
-import Domain.Auth
-import qualified Text.Digestive.Form as DF
-import qualified Text.Digestive.Aeson as DF
-import Data.Aeson hiding (json)
-import Network.HTTP.Types.Status
+import Blaze.ByteString.Builder (toLazyByteString)
+import Web.Cookie
+import Data.Time.Lens
+import qualified Text.Digestive.Types as DF
 
 
-
+import Domain.ImportEntity as E
+import Domain.ImportService as S
 
 
 toResult :: Either e a -> DF.Result e a

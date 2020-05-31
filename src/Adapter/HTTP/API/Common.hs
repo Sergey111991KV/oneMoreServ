@@ -43,8 +43,7 @@ reqCurrentUserId = do
       status status401
       json $ errorResponse ("AuthRequired" :: Text)
       finish
-    Just userId ->
-    return userId
+    Just userId -> return userId
 
 -- * Error response
 

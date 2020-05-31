@@ -13,12 +13,11 @@ import Domain.ImportService as S
 import qualified Adapter.HTTP.API.Main as API
 import qualified Adapter.HTTP.Web.Main as Web
 
-main :: ( MonadIO m, KatipContext m, AuthRepo m
-        , EmailVerificationNotif m, SessionRepo m)
+mainALL :: ( MonadIO m, KatipContext m, SessionRepo m)
      => Int -> (m Response -> IO Response) -> IO ()
-main port runner = do
-  web <- Web.main runner
-  api <- API.main runner
+mainALL port runner = do
+  web <- Web.mainWEB runner
+  api <- API.mainAPI runner
   run port $ vhost [(pathBeginsWith "api", api)] web
   where
     pathBeginsWith path req = headMay (pathInfo req) == Just path

@@ -15,11 +15,11 @@ import Domain.ImportService as S
 import Adapter.HTTP.API.Common
 import qualified Adapter.HTTP.API.Auth as AuthAPI
 
-mainHTTP :: ( MonadIO m, KatipContext m, SessionRepo m)
-     => Int -> (m Response -> IO Response) -> IO ()
-mainHTTP port runner = 
-  scottyT port runner routes
-  
+mainAPI :: ( MonadIO m, KatipContext m, SessionRepo m)
+     => (m Response -> IO Response) -> IO Application
+mainAPI runner =
+        scottyAppT runner routes
+      
 
 routes :: ( MonadIO m, KatipContext m, SessionRepo m)
           => ScottyT LText m ()

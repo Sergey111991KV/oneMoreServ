@@ -13,7 +13,8 @@ class Monad m => SessionRepo m where
     findUserIdByUser            :: Users -> m (Maybe UserId)
     newSession                  :: UserId -> m SessionId
     findUserIdBySessionId       :: SessionId -> m (Maybe UserId)
-    findAccessAdminByUserId     :: UserId -> m (Maybe Bool)
+    findAccessAdminByUserId     :: UserId -> m (Maybe AccessAdmin)
+    newUserId                   ::  m (Maybe UserId)
     -- findAccessAuthorByUserId    :: UserId -> m (Maybe Bool)
     
 

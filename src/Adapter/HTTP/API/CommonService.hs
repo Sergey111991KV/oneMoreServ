@@ -34,7 +34,17 @@ routes = undefined
 --                   Right sId -> do
 --                     setSessionIdInCookie sId
 --                     return ()
+            -- post "/create/author" $
+            --     text "it's module don't realised"
 
+            -- post "/editing/author/:id" $
+
+            -- post "/editing/user/:id" $
+            -- post "/editing/news/:id" $
+            -- post "/editing/category1/:id" $
+            -- post "/editing/category2/:id" $
+            -- post "/editing/category3/:id" $
+            
 
 
 logFormAuthor :: (Monad m) => DF.Form [Text] m E.Author 

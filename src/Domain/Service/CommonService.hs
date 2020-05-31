@@ -26,10 +26,10 @@ data Entity   =
 
 class Monad m =>  CommonService m  where
     create  :: Maybe Entity  -> m (Either E.Error Entity )
-    editing :: Entity -> m (Either E.Error Entity)
-    getAll  :: String -> m (Either E.Error [Entity])
-    getOne  :: String -> Int -> m (Either E.Error  Entity)
-    remove  :: Entity -> m (Either E.Error ())
+    editing :: Int -> m (Either E.Error Entity)
+    getAll  :: m (Either E.Error [Entity])
+    getOne  :: Int -> m (Either E.Error  Entity)
+    remove  :: Int -> m (Either E.Error ())
 
 -- class Monad m =>  CommonService m  where
 --     create  :: Bool -> Maybe (Entity a) -> m (Either Error (Entity a))
