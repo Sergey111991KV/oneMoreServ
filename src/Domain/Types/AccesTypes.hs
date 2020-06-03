@@ -12,7 +12,6 @@ import Database.PostgreSQL.Simple.ToRow
 import Database.PostgreSQL.Simple.FromRow 
 import Database.PostgreSQL.Simple.ToField 
 import Database.PostgreSQL.Simple.FromField
-import Text.Regex.PCRE.Heavy
 import           Database.PostgreSQL.Simple.TypeInfo as TI
 import qualified Database.PostgreSQL.Simple.TypeInfo.Static as TI
 import           Database.PostgreSQL.Simple.TypeInfo.Macro as TI
@@ -155,3 +154,4 @@ mkPassword =
                     , regexMatches [re|[A-Z]|] "Should contain uppercase letter"
                     , regexMatches [re|[a-z]|] "Should contain lowercase letter"
                     ]
+    

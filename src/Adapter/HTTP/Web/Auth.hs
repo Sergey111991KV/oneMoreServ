@@ -22,9 +22,9 @@ import Domain.ImportService as S
 
 data Auth = Auth Login Password
 
-routes :: ( ScottyError e, MonadIO m, KatipContext m, SessionRepo m)
+routesAuth :: ( ScottyError e, MonadIO m, KatipContext m, SessionRepo m)
           => ScottyT e m ()
-routes = do
+routesAuth = do
         get "/" $
             redirect "/users"
 

@@ -9,6 +9,8 @@ import Network.Wai.Middleware.Static
 import Network.Wai.Middleware.Gzip
 
 import qualified Adapter.HTTP.Web.Auth as Auth
+import qualified Adapter.HTTP.Web.Menu as Menu
+import Adapter.HTTP.Web.CommonService as Common
 
 import Domain.ImportEntity as E
 import Domain.ImportService as S
@@ -26,8 +28,10 @@ routes cacheContainer = do
     gzip $ def { gzipFiles = GzipCompress }
 --   middleware $
 --     staticPolicyWithOptions cacheContainer (addBase "src/Adapter/HTTP/Web/static")
+  Menu.routesMenu
+  Auth.routesAuth
+  Common.routesCommon
 
-  Auth.routes
 
   notFound $ do
     status status404

@@ -99,14 +99,23 @@ findAccessAdminByUserId uId = do
       qry = "select admini from user_blog where id_user = ? "
 
 
-newUserId :: PG r m =>  m (Maybe UserId)
+newUserId :: PG r m =>  m  UserId
 newUserId = do 
     result <- withConn $ \conn -> query_ conn qry 
     return $ case result of
-        [nUid]   -> Just nUid
-        _        -> Nothing
+        [nUid]   -> nUid
+        _        ->  UserId 1
     where
       qry = "select (max(id_user) +1) from user_blog "
+
+deleteAllSession ::  PG r m =>  m  Int64
+deleteAllSession = do
+        let q = "DELETE FROM session;" 
+        result <- withConn $ \conn -> execute_ conn q 
+        return result
+
+
+
 
 -- findAccessAuthorByUserId :: PG r m
 --                 => UserId -> m (Maybe Bool)

@@ -106,11 +106,8 @@ routes = do
         get "/api/newUserId" $ do
             nUId <- lift $ newUserId  
             print "newUserId" 
-            case nUId of
-                Nothing -> do
-                  json ( "Ошибка в нахождении пользователя" :: Text)
-                Just i  -> do
-                  json (rawUserId i)
+            json (nUId)
+              
                                  
         -- post "/api/author/:userId" $ do
         --         uId   :: Int   <-      param "userId" 

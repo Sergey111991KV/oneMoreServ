@@ -14,7 +14,7 @@ class Monad m => SessionRepo m where
     newSession                  :: UserId -> m SessionId
     findUserIdBySessionId       :: SessionId -> m (Maybe UserId)
     findAccessAdminByUserId     :: UserId -> m (Maybe AccessAdmin)
-    newUserId                   ::  m (Maybe UserId)
+    newUserId                   :: m UserId
     -- findAccessAuthorByUserId    :: UserId -> m (Maybe Bool)
     
 
@@ -39,3 +39,7 @@ login log pass = runExceptT $ do
         Nothing -> throwError LoginError
         Just uId -> withUserIdContext uId . lift $ newSession uId
 
+
+
+findNewUserIdFromMonad :: SessionRepo m => m UserId -> UserId
+findNewUserIdFromMonad = undefined

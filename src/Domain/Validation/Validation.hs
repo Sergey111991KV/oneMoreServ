@@ -25,3 +25,7 @@ lengthBetween minLen maxLen msg val =
 regexMatches :: Regex -> ErrMsg -> Validation Text
 regexMatches regex msg val = 
   if val =~ regex then Nothing else Just msg
+  
+regexNotMatches :: Regex -> ErrMsg -> Validation Text
+regexNotMatches regex msg val = 
+  if val =~ regex then Just msg else Nothing
