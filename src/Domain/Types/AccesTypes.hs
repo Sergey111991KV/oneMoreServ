@@ -20,11 +20,11 @@ import           Data.ByteString.Builder
 data  Users = Users
   { 
     id_user      :: UserId
-  , name         :: String
-  , lastName     :: String
+  , name         :: Text
+  , lastName     :: Text
   , authLogin    :: Login
   , authPassword :: Password
-  , avatar       :: String
+  , avatar       :: Text
   , dataCreate   :: UTCTime
   , authAuthor   :: Bool
   , authAdmin    :: AccessAdmin

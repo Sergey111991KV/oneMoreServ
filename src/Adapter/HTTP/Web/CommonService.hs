@@ -14,6 +14,7 @@ import qualified Text.Blaze.Html5 as H
 import qualified Text.Blaze.Html5.Attributes as A
 import Network.HTTP.Types.Status
 import Data.Text.Read
+import Data.Text.Time
 
 import Domain.Validation.Validation
 import Adapter.HTTP.Common
@@ -23,25 +24,31 @@ import Domain.ImportEntity as E
 import Domain.ImportService as S
 
 
-routesCommon :: ( ScottyError e, MonadIO m, KatipContext m, SessionRepo m)
+routesCommon :: ( ScottyError e, MonadIO m, KatipContext m, SessionRepo m, CommonService m)
           => ScottyT e m ()
 routesCommon = do
-
+        get "/iduser" $ do
+            (UserId uid) <- reqCurrentUserId
+            let result = show uid
+            -- view <- DF.getForm "idUser" idForm
+            renderHtml $ idPage (pack result)
         get "/create/user" $ do 
             view <- DF.getForm "user" userForm
-            renderHtml $ createUserPage view []
+            (UserId newId) <- lift $ newUserId
+            renderHtml $ createUserPage newId view []
         
-        -- post "/create/user" $ do 
-        --     (view, mayUser) <- runForm "user" userForm
-        --     case mayUser of
-        --         Nothing ->
-        --             renderHtml $ userPage view ["Data is incorrect"]
-        --         Just user -> do
-        --             result <- lift $ createUser user
-        --             case result of
-        --                 Left LoginErrorEmailNotVerified -> renderHtml $ loginPage view ["Email has not been verified"]
-        --                 Right sId -> do
-        --                     text "ned to trans base of data"
+        post "/create/user" $ do 
+            (view, mayUser) <- runForm "user" userForm
+            (UserId newId) <- lift $ newUserId
+            case mayUser of
+                Nothing ->
+                    renderHtml $ createUserPage newId view ["Data is incorrect"]
+                Just user -> do
+                    result <- lift $ create ( Just (EntUsers user))
+                    case result of
+                        Left LoginErrorEmailNotVerified -> text "Email has not been verified"
+                        Right sId -> do
+                            text "ned to trans base of data"
         
 userForm :: Monad m =>  DF.Form [Text] m Users
 userForm = do
@@ -55,7 +62,7 @@ userForm = do
                     <*> "authAuthor"  .: authAuthorForm
                     <*> "authAdmin"  .: authAdminForm
   where
-        idForm = DF.validate (toResult . mkId) (DF.text Nothing)
+        idForm = DF.validate (toResult . mkId) (DF.text Nothing) 
         nameForm = DF.validate (toResult . mkName) (DF.text Nothing)
         lastNameForm = DF.validate (toResult . mkLastName) (DF.text Nothing)
         authLoginForm = DF.validate (toResult . mkLogin) (DF.text Nothing)
@@ -66,56 +73,80 @@ userForm = do
         authAdminForm = DF.validate (toResult . authAdminCreate) (DF.bool Nothing)
 
 mkId :: Text -> Either [ErrMsg] UserId
-mkId txt = undefined
+mkId  = parseTextId' . decimal 
+
+parseTextId' :: Either String (Integer, Text) -> Either [ErrMsg] UserId
+parseTextId' (Left err) = Left [pack err]
+parseTextId' (Right (uId, txt)) = Right (UserId (fromIntegral uId))
+
+mkName :: Text -> Either [ErrMsg] Text
+mkName txt = 
+    case t of
+        ""  -> Left [err]
+        _   ->  Right txt
+    where 
+        t   = unpack txt
+        err = "Error parse Name" :: Text
 
 
---  do
---     result <- decimal txt
---     case result of
---         Left err -> Left err :: [ErrMsg]
---         Right (uId, t) -> Right uId
+mkLastName :: Text -> Either [ErrMsg] Text
+mkLastName txt = 
+        case t of
+            ""  -> Left [err]
+            _   ->  Right txt
+        where 
+            t   = unpack txt
+            err = "Error parse LastName" :: Text
 
-mkName :: Text -> Either [ErrMsg] String
-mkName txt = undefined
-
-mkLastName :: Text -> Either [ErrMsg] String
-mkLastName txt = undefined
-
-mkAvatar :: Text -> Either [ErrMsg] String
-mkAvatar txt = undefined
+mkAvatar :: Text -> Either [ErrMsg] Text
+mkAvatar txt = 
+        case t of
+            ""  -> Left [err]
+            _   ->  Right txt
+        where 
+            t   = unpack txt
+            err = "Error parse URL Avatar" :: Text
 
 mkdataCreate :: Text -> Either [ErrMsg] UTCTime
-mkdataCreate txt = undefined
+mkdataCreate txt = do
+    let  result = parseUTCTimeOrError txt
+    case result of
+        Left err -> Left [pack err]
+        Right time -> Right time
 
 
 authAuthorCreate :: Bool -> Either [ErrMsg] Bool
-authAuthorCreate txt = undefined
-
+authAuthorCreate bool = Right bool
+   
 
 authAdminCreate :: Bool -> Either [ErrMsg] AccessAdmin
-authAdminCreate txt = undefined
+authAdminCreate bool = Right (AccessAdmin bool)
 
 
-createUserPage :: DF.View [Text] -> [Text] -> H.Html
-createUserPage view msgs = 
+createUserPage :: Int -> DF.View [Text] -> [Text] -> H.Html
+createUserPage uId view msgs = 
   mainLayout "CreateUser" $ do
     H.div $
-        createFormLayout view "CreateUser" "/create/user" msgs
+        createFormLayout uId view "CreateUser" "/create/user" msgs
     H.div $
       H.a ! A.href "/create" $ "Back"
 
-stringErrMsg :: String -> [ErrMsg]
-stringErrMsg txt = pack txt
 
-createFormLayout :: DF.View [Text] -> Text -> Text -> [Text] -> H.Html
-createFormLayout view formTitle action msgs =
+
+
+
+
+-- [pack txt] -- тот момент когда функция возвращает то что надо по типу, но не так как задумывалась))))
+
+createFormLayout :: Int -> DF.View [Text] -> Text -> Text -> [Text] -> H.Html
+createFormLayout i view formTitle action msgs =
   formLayout view action $ do
     H.h2 $
       H.toHtml formTitle
     H.div $
       errorList msgs
     H.div $ do
-      H.label "Id"
+      H.label newId
       DH.inputText "id" view
       H.div $
         errorList' "id"
@@ -144,6 +175,21 @@ createFormLayout view formTitle action msgs =
       DH.inputPassword "avatar" view
       H.div $
         errorList' "avatar"
+    H.div $ do
+      H.label "Data Create"
+      DH.inputPassword "dataCreate" view
+      H.div $
+        errorList' "dataCreate"
+    H.div $ do
+      H.label "Author"
+      DH.inputPassword "authAuthor" view
+      H.div $
+        errorList' "authAuthor"
+    H.div $ do
+      H.label "Admin"
+      DH.inputPassword "authAdmin" view
+      H.div $
+        errorList' "authAdmin"
     H.input ! A.type_ "submit" ! A.value "Submit"
   where
     errorList' path =
@@ -152,7 +198,20 @@ createFormLayout view formTitle action msgs =
       H.ul . concatMap errorItem
     errorItem =
       H.li . H.toHtml
+    newId = H.toHtml $ show i
 
+
+
+idPage :: Text -> H.Html
+idPage msg = 
+    mainLayout " Проверка id "  $  do
+        H.h1 " Проверка id "
+        H.div  $  H.toHtml msg
+
+
+
+idForm :: (Monad m) => DF.Form [Text] m UserId
+idForm = undefined
 -- authForm :: (Monad m) => DF.Form [Text] m Auth
 -- authForm =
 --   Auth <$> "email" .: emailForm

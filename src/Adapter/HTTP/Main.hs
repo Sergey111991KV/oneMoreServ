@@ -13,7 +13,7 @@ import Domain.ImportService as S
 import qualified Adapter.HTTP.API.Main as API
 import qualified Adapter.HTTP.Web.Main as Web
 
-mainALL :: ( MonadIO m, KatipContext m, SessionRepo m)
+mainALL :: ( MonadIO m, KatipContext m, SessionRepo m, CommonService m)
      => Int -> (m Response -> IO Response) -> IO ()
 mainALL port runner = do
   web <- Web.mainWEB runner

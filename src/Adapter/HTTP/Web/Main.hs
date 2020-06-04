@@ -15,13 +15,13 @@ import Adapter.HTTP.Web.CommonService as Common
 import Domain.ImportEntity as E
 import Domain.ImportService as S
 
-mainWEB :: ( MonadIO m, KatipContext m, SessionRepo m)
+mainWEB :: ( MonadIO m, KatipContext m, SessionRepo m, CommonService m)
      => (m Response -> IO Response) -> IO Application
 mainWEB runner = do
   cacheContainer <- initCaching PublicStaticCaching
   scottyAppT runner $ routes cacheContainer
 
-routes :: ( MonadIO m, KatipContext m, SessionRepo m)
+routes :: ( MonadIO m, KatipContext m, SessionRepo m, CommonService m)
        => CacheContainer -> ScottyT LText m ()
 routes cacheContainer = do
   middleware $

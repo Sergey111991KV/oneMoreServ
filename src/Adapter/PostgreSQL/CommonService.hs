@@ -87,32 +87,39 @@ create  (Just (S.EntCategory (S.CatCategory3 (E.Category3 idCF text refId))))  =
 
            
 
-editing :: PG r m => Bool -> S.Entity -> m (Either E.Error S.Entity)
-editing False _ = return (Left E.AccessError)
-editing True (S.EntAuthor (E.Author idA text idU)) = do
-        result <- withConn $ \conn -> query conn qry (idA, text, idU)
-        return $ case result of
-            _                          ->  Left E.DataError
-            [(idA, text, idU)]         ->  Right (S.EntAuthor (E.Author idA text idU)) 
-        where
-                        qry = "insert into auths \
-                              \(email, pass, email_verification_code, is_email_verified) \
-                              \values (?, crypt(?, gen_salt('bf')), ?, 'f') returning id"
+-- editing :: PG r m => Int -> m (Either E.Error S.Entity)
+-- editing False _ = return (Left E.AccessError)
+-- editing True (S.EntAuthor (E.Author idA text idU)) = do
+--         result <- withConn $ \conn -> query conn qry (idA, text, idU)
+--         return $ case result of
+--             _                          ->  Left E.DataError
+--             [(idA, text, idU)]         ->  Right (S.EntAuthor (E.Author idA text idU)) 
+--         where
+--                         qry = "insert into auths \
+--                               \(email, pass, email_verification_code, is_email_verified) \
+--                               \values (?, crypt(?, gen_salt('bf')), ?, 'f') returning id"
     
-getAll :: PG r m => Bool -> String -> m (Either E.Error [S.Entity])
-getAll False _ = return (Left E.AccessError)
-getAll True x  
-                | x == "author" = return (Left E.AccessError)
-                | x == "users"  = return (Left E.AccessError)
-                | x == "tegs"   = return (Left E.AccessError)
+-- getAll :: PG r m => Bool -> String -> m (Either E.Error [S.Entity])
+-- getAll False _ = return (Left E.AccessError)
+-- getAll True x  
+--                 | x == "author" = return (Left E.AccessError)
+--                 | x == "users"  = return (Left E.AccessError)
+--                 | x == "tegs"   = return (Left E.AccessError)
 
-getOne :: PG r m => Bool -> String ->  Int -> m (Either E.Error  S.Entity)
-getOne False _ _   = return (Left E.AccessError)
-getOne True  t idE = return (Left E.AccessError)
+-- getOne :: PG r m => Bool -> String ->  Int -> m (Either E.Error  S.Entity)
+-- getOne False _ _   = return (Left E.AccessError)
+-- getOne True  t idE = return (Left E.AccessError)
 
-remove :: PG r m => Bool ->  S.Entity -> m (Either E.Error ())
-remove False _  = return (Left E.AccessError)
-remove True (S.EntAuthor (E.Author idA text idU)) = return (Left E.AccessError)
+-- remove :: PG r m => Bool ->  S.Entity -> m (Either E.Error ())
+-- remove False _  = return (Left E.AccessError)
+-- remove True (S.EntAuthor (E.Author idA text idU)) = return (Left E.AccessError)
+
+
+-- create  :: Maybe Entity  -> m (Either E.Error Entity )
+--     editing :: Int -> m (Either E.Error Entity)
+--     getAll  :: m (Either E.Error [Entity])
+--     getOne  :: Int -> m (Either E.Error  Entity)
+--     remove  :: Int -> m (Either E.Error ())
 
 
 -- class  CategoryService a where

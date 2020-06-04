@@ -55,6 +55,7 @@ dependencies:
 - blaze-html
 - wai-middleware-static
 - warp
+- text-time
 
 default-extensions:
 - NoImplicitPrelude

@@ -48,6 +48,7 @@ extra-deps:
 - postgresql-simple-migration-0.1.15.0
 - hedis-0.12.13
 - MissingH-1.4.3.0
+- text-time-0.2.0
 
 # Override default flag values for local packages and extra-deps
 # flags: {}

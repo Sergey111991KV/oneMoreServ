@@ -27,13 +27,15 @@ instance SessionRepo App where
   findUsers               = PG.findUsers
   findAccessAdminByUserId = PG.findAccessAdminByUserId
   newUserId               = PG.newUserId
+
+
   -- findAccessAuthorByUserId = PG.findAccessAuthorByUserId
--- instance CommonService App where
---       create  =   PG.create
---       editing =   PG.editing
---       getAll  =   PG.getAll
---       getOne  =   PG.getOne
---       remove  =   PG.remove
+instance CommonService App where
+      create  =   PG.create
+      -- editing =   PG.editing
+      -- getAll  =   PG.getAll
+      -- getOne  =   PG.getOne
+      -- remove  =   PG.remove
 
 
 mainL :: IO ()

@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 22e6cf437e7e09c5de9cd24b6ae1a63f6f6b5a61162009cc5eb342ec293e13d2
+-- hash: 3e4240e9a6f8560cd4d158f288faef765c0276732e70d92a7d2d42f202865e0f
 
 name:           oneMoreServ
 version:        0.1.0.0
@@ -99,6 +99,7 @@ library
     , string-random
     , template-haskell
     , text
+    , text-time
     , time
     , time-lens
     , wai
@@ -145,6 +146,7 @@ executable oneMoreServ-exe
     , string-random
     , template-haskell
     , text
+    , text-time
     , time
     , time-lens
     , wai
@@ -192,6 +194,7 @@ test-suite oneMoreServ-test
     , string-random
     , template-haskell
     , text
+    , text-time
     , time
     , time-lens
     , wai
