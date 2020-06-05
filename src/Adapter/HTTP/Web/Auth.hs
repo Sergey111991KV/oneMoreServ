@@ -26,6 +26,7 @@ routesAuth :: ( ScottyError e, MonadIO m, KatipContext m, SessionRepo m)
           => ScottyT e m ()
 routesAuth = do
         get "/" $
+            
             redirect "/users"
 
                 -- home
@@ -52,6 +53,7 @@ routesAuth = do
         --         -- login
         get "/auth/login" $ do
             view <- DF.getForm "auth" authForm
+
             renderHtml $ loginPage view []
         post "/auth/login" $ do
             (view, mayAuth) <- runForm "auth" authForm
@@ -130,3 +132,6 @@ authForm =
   where
         loginForm = DF.validate (toResult . mkLogin) (DF.text Nothing)
         passwordForm = DF.validate (toResult . mkPassword) (DF.text Nothing)
+
+
+        

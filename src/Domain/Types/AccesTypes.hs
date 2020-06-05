@@ -26,8 +26,8 @@ data  Users = Users
   , authPassword :: Password
   , avatar       :: Text
   , dataCreate   :: UTCTime
-  , authAuthor   :: Bool
   , authAdmin    :: AccessAdmin
+  , authAuthor   :: Bool
   } deriving (Show, Eq, Generic)
 
 instance FromRow Users where
@@ -35,7 +35,7 @@ instance FromRow Users where
 
 instance FromJSON Users
 instance ToJSON Users
--- instance  ToRow Users
+instance  ToRow Users
 
 
 
@@ -45,9 +45,11 @@ rawLogin :: Login -> Text
 rawLogin = loginRaw
 
 instance FromField Login where
-    fromField field mb_bytestring = Login <$> fromField field mb_bytestring
+  fromField field mb_bytestring = Login <$> fromField field mb_bytestring
 
--- instance  ToField Login
+instance  ToField Login where
+  toField log = toField $ loginRaw log
+
 instance FromJSON Login
 instance ToJSON Login
 instance ToRow Login
@@ -60,7 +62,8 @@ rawPassword = passwordRaw
 instance FromField Password where
     fromField field mb_bytestring = Password <$> fromField field mb_bytestring
 
--- instance  ToField Password
+instance  ToField Password where
+  toField pass = toField $ passwordRaw pass
 instance FromJSON Password
 instance ToJSON Password
 instance  ToRow Password

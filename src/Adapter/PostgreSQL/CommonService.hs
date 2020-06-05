@@ -6,6 +6,7 @@ import Control.Monad.Except
 import Katip
 import Database.PostgreSQL.Simple
 import Data.Maybe
+import Data.Text.Time
 
 
 import qualified Domain.ImportService as S
@@ -16,49 +17,70 @@ import Adapter.PostgreSQL.CommonService.ImportCommon as CSP
 
 
     
-create  :: PG r m => (Maybe S.Entity) -> m (Either E.Error S.Entity )
+create  :: PG r m =>  S.Entity -> m (Either E.Error Int64 )
 -- create = undefined
-create  _      = return (Left E.AccessError)
-create  Nothing = return (Left E.DataError)
-create  (Just (S.EntAuthor (E.Author idA text idU)))  = do
-        result <- withConn $ \conn -> query conn qry (idA, text, idU)
+-- create  (Just (S.EntAuthor (E.Author idA text idU)))  = do
+--         result <- withConn $ \conn -> query conn qry (idA, text, idU)
+--         return $ case result of
+--             _                          ->  Left E.DataError
+--             [(idA, text, idU)]         ->  Right (S.EntAuthor (E.Author idA text idU)) 
+--         where
+--                         qry = "insert into auths \
+--                               \(email, pass, email_verification_code, is_email_verified) \
+--                               \values (?, crypt(?, gen_salt('bf')), ?, 'f') returning id"
+create   (S.EntUsers users)  = do
+        print "createUsers"
+        result <- withConn $ \conn -> execute conn q users
         return $ case result of
-            _                          ->  Left E.DataError
-            [(idA, text, idU)]         ->  Right (S.EntAuthor (E.Author idA text idU)) 
+            _        ->  Left E.DataError
+            i        ->  Right i
         where
-                        qry = "insert into auths \
-                              \(email, pass, email_verification_code, is_email_verified) \
-                              \values (?, crypt(?, gen_salt('bf')), ?, 'f') returning id"
-create  (Just (S.EntCategory (S.CatCategory1 (E.Category1 idCF text))))  = do
-        result <- withConn $ \conn -> query conn qry (idCF, text)
+            q = "insert into user_blog (id_user, name, last_name, login, password, avatar, data_create, admini, author) values (?,?,?,?,?,?,?,?,?)"
+                                                       
+       
+create' :: PG r m =>  E.Users -> m (Either E.Error Int64 )
+create'   users  = do
+        print "createUsers"
+        result <- withConn $ \conn -> execute conn q users
         return $ case result of
-            _                          ->  Left E.DataError
-            [(idCF, text)]             ->  Right (S.EntCategory ( S.CatCategory1 (E.Category1 idCF text)))
+            _        ->  Left E.DataError
+            i        ->  Right i
         where
-                        qry = "insert into auths \
-                              \(email, pass, email_verification_code, is_email_verified) \
-                              \values (?, crypt(?, gen_salt('bf')), ?, 'f') returning id"
+            q = "insert into user_blog (id_user, name, last_name, login, password, avatar, data_create, admini, author) values (?,?,?,?,?,?,?,?,?)"
+                     
+
+
+
+-- create  (Just (S.EntCategory (S.CatCategory1 (E.Category1 idCF text))))  = do
+--         result <- withConn $ \conn -> query conn qry (idCF, text)
+--         return $ case result of
+--             _                          ->  Left E.DataError
+--             [(idCF, text)]             ->  Right (S.EntCategory ( S.CatCategory1 (E.Category1 idCF text)))
+--         where
+--                         qry = "insert into auths \
+--                               \(email, pass, email_verification_code, is_email_verified) \
+--                               \values (?, crypt(?, gen_salt('bf')), ?, 'f') returning id"
                               
                               
-create  (Just (S.EntCategory (S.CatCategory2 (E.Category2 idCF text refId))))  = do
-        result <- withConn $ \conn -> query conn qry (idCF, text)
-        return $ case result of
-            _                          ->  Left E.DataError
-            [(idCF, text)]             ->  Right (S.EntCategory ( S.CatCategory1 (E.Category1 idCF text)))
-        where
-                        qry = "insert into auths \
-                              \(email, pass, email_verification_code, is_email_verified) \
-                              \values (?, crypt(?, gen_salt('bf')), ?, 'f') returning id"
+-- create  (Just (S.EntCategory (S.CatCategory2 (E.Category2 idCF text refId))))  = do
+--         result <- withConn $ \conn -> query conn qry (idCF, text)
+--         return $ case result of
+--             _                          ->  Left E.DataError
+--             [(idCF, text)]             ->  Right (S.EntCategory ( S.CatCategory1 (E.Category1 idCF text)))
+--         where
+--                         qry = "insert into auths \
+--                               \(email, pass, email_verification_code, is_email_verified) \
+--                               \values (?, crypt(?, gen_salt('bf')), ?, 'f') returning id"
                               
-create  (Just (S.EntCategory (S.CatCategory3 (E.Category3 idCF text refId))))  = do
-        result <- withConn $ \conn -> query conn qry (idCF, text)
-        return $ case result of
-            _                          ->  Left E.DataError
-            [(idCF, text)]             ->  Right (S.EntCategory ( S.CatCategory1 (E.Category1 idCF text)))
-        where
-                        qry = "insert into auths \
-                              \(email, pass, email_verification_code, is_email_verified) \
-                              \values (?, crypt(?, gen_salt('bf')), ?, 'f') returning id"
+-- create  (Just (S.EntCategory (S.CatCategory3 (E.Category3 idCF text refId))))  = do
+--         result <- withConn $ \conn -> query conn qry (idCF, text)
+--         return $ case result of
+--             _                          ->  Left E.DataError
+--             [(idCF, text)]             ->  Right (S.EntCategory ( S.CatCategory1 (E.Category1 idCF text)))
+--         where
+--                         qry = "insert into auths \
+--                               \(email, pass, email_verification_code, is_email_verified) \
+--                               \values (?, crypt(?, gen_salt('bf')), ?, 'f') returning id"
 
 
 

@@ -15,6 +15,7 @@ import qualified Text.Blaze.Html5.Attributes as A
 import Network.HTTP.Types.Status
 import Data.Text.Read
 import Data.Text.Time
+import System.IO.Unsafe
 
 import Domain.Validation.Validation
 import Adapter.HTTP.Common
@@ -23,44 +24,82 @@ import Adapter.HTTP.Web.Common
 import Domain.ImportEntity as E
 import Domain.ImportService as S
 
+formTest :: (Monad m) => DF.Form [Text] m AccessAdmin
+formTest =
+    "authAdmin"  .: authAdminForm
+    where
+            authAdminForm = DF.validate (toResult . authAdminCreate) (DF.text Nothing)
+
+createTestPage ::  DF.View [Text] -> [Text] -> H.Html
+createTestPage view msgs = 
+  mainLayout "CreateUser" $ do
+    H.div $
+        createFormLayoutTest  view "CreateUser" "/create/user" msgs
+    
+createFormLayoutTest :: DF.View [Text] -> Text -> Text -> [Text] -> H.Html
+createFormLayoutTest view formTitle action msgs =
+  formLayout view action $ do
+    H.h2 $
+      H.toHtml formTitle
+    H.div $
+      errorList msgs
+    H.div $ do
+      H.label "authAdmin"
+      DH.inputText "authAdmin" view
+      H.div $
+        errorList' "authAdmin"
+    H.input ! A.type_ "submit" ! A.value "Submit"
+    where
+        errorList' path =
+            errorList . mconcat $ DF.errors path view 
+        errorList =
+            H.ul . concatMap errorItem
+        errorItem =
+            H.li . H.toHtml
+        newTime = H.toHtml $ formatISODateTime $ unsafePerformIO getCurrentTime
 
 routesCommon :: ( ScottyError e, MonadIO m, KatipContext m, SessionRepo m, CommonService m)
           => ScottyT e m ()
 routesCommon = do
-        get "/iduser" $ do
-            (UserId uid) <- reqCurrentUserId
-            let result = show uid
-            -- view <- DF.getForm "idUser" idForm
-            renderHtml $ idPage (pack result)
+       
         get "/create/user" $ do 
             view <- DF.getForm "user" userForm
-            (UserId newId) <- lift $ newUserId
-            renderHtml $ createUserPage newId view []
+            renderHtml $ createUserPage view []
+
+            -- view' <- DF.getForm "authAdmin" formTest
+            -- renderHtml $ createTestPage view' []
         
         post "/create/user" $ do 
+            print "post"
             (view, mayUser) <- runForm "user" userForm
-            (UserId newId) <- lift $ newUserId
+            
+            -- (view', mayUser') <- runForm "authAdmin" formTest
+            
+            print mayUser
             case mayUser of
                 Nothing ->
-                    renderHtml $ createUserPage newId view ["Data is incorrect"]
+                    renderHtml $ createUserPage view ["Data is incorrect"]
                 Just user -> do
-                    result <- lift $ create ( Just (EntUsers user))
+                    let newUser = S.EntUsers user
+                    print newUser
+                    result <- lift $ create  newUser
                     case result of
-                        Left LoginErrorEmailNotVerified -> text "Email has not been verified"
+                        Left err -> text "don't to base"
                         Right sId -> do
-                            text "ned to trans base of data"
+                            text "all good"
         
-userForm :: Monad m =>  DF.Form [Text] m Users
+userForm :: Monad m =>  DF.Form [Text] m (E.Users)
 userForm = do
-            Users   <$> "id"        .: idForm
-                    <*> "name"      .: nameForm
-                    <*> "lastName"  .: lastNameForm
-                    <*> "authLogin"  .: authLoginForm
-                    <*> "authPassword"  .: authPasswordForm
-                    <*> "avatar"  .: avatarForm
-                    <*> "dataCreate"  .: dataCreateForm
-                    <*> "authAuthor"  .: authAuthorForm
+        -- EntUsers    E.Users  
+            Users   <$> "id"        .: idForm --  проверил 
+                    <*> "name"      .: nameForm -- проверил
+                    <*> "lastName"  .: lastNameForm -- проверил
+                    <*> "authLogin"  .: authLoginForm -- true
+                    <*> "authPassword"  .: authPasswordForm --
+                    <*> "avatar"  .: avatarForm -- 
+                    <*> "dataCreate"  .: dataCreateForm -- succses
                     <*> "authAdmin"  .: authAdminForm
+                    <*> "authAuthor"  .: authAuthorForm
   where
         idForm = DF.validate (toResult . mkId) (DF.text Nothing) 
         nameForm = DF.validate (toResult . mkName) (DF.text Nothing)
@@ -69,8 +108,8 @@ userForm = do
         authPasswordForm = DF.validate (toResult . mkPassword) (DF.text Nothing)
         avatarForm = DF.validate (toResult . mkAvatar) (DF.text Nothing)
         dataCreateForm = DF.validate (toResult . mkdataCreate) (DF.text Nothing)
-        authAuthorForm = DF.validate (toResult . authAuthorCreate) (DF.bool Nothing)
-        authAdminForm = DF.validate (toResult . authAdminCreate) (DF.bool Nothing)
+        authAuthorForm = DF.validate (toResult . authAuthorCreate) (DF.text Nothing)
+        authAdminForm = DF.validate (toResult . authAdminCreate) (DF.text Nothing)
 
 mkId :: Text -> Either [ErrMsg] UserId
 mkId  = parseTextId' . decimal 
@@ -115,38 +154,46 @@ mkdataCreate txt = do
         Right time -> Right time
 
 
-authAuthorCreate :: Bool -> Either [ErrMsg] Bool
-authAuthorCreate bool = Right bool
+authAuthorCreate :: Text -> Either [ErrMsg] Bool
+authAuthorCreate txt = 
+    case t of
+        "False"   ->  Right False
+        "True"    ->  Right True
+        _         -> Left [err]
+    where 
+        t   = unpack txt
+        err = "Error parse Bool Author! Put True or False" :: Text
    
 
-authAdminCreate :: Bool -> Either [ErrMsg] AccessAdmin
-authAdminCreate bool = Right (AccessAdmin bool)
+authAdminCreate :: Text -> Either [ErrMsg] AccessAdmin
+authAdminCreate txt =
+    case t of
+        "False"   ->  Right (AccessAdmin False)
+        "True"    ->  Right (AccessAdmin True)
+        _         -> Left [err]
+    where 
+        t   = unpack txt
+        err = "Error parse Bool Admin! Put True or False" :: Text
+   
 
 
-createUserPage :: Int -> DF.View [Text] -> [Text] -> H.Html
-createUserPage uId view msgs = 
+createUserPage ::DF.View [Text] -> [Text] -> H.Html
+createUserPage view msgs = 
   mainLayout "CreateUser" $ do
     H.div $
-        createFormLayout uId view "CreateUser" "/create/user" msgs
+        createFormLayout view "CreateUser" "/create/user" msgs
     H.div $
       H.a ! A.href "/create" $ "Back"
 
-
-
-
-
-
--- [pack txt] -- тот момент когда функция возвращает то что надо по типу, но не так как задумывалась))))
-
-createFormLayout :: Int -> DF.View [Text] -> Text -> Text -> [Text] -> H.Html
-createFormLayout i view formTitle action msgs =
+createFormLayout :: DF.View [Text] -> Text -> Text -> [Text] -> H.Html
+createFormLayout view formTitle action msgs =
   formLayout view action $ do
     H.h2 $
       H.toHtml formTitle
     H.div $
       errorList msgs
     H.div $ do
-      H.label newId
+      H.label "   Put this Id"
       DH.inputText "id" view
       H.div $
         errorList' "id"
@@ -176,7 +223,8 @@ createFormLayout i view formTitle action msgs =
       H.div $
         errorList' "avatar"
     H.div $ do
-      H.label "Data Create"
+      H.label  newTime
+      H.label "   Put Data Create"
       DH.inputPassword "dataCreate" view
       H.div $
         errorList' "dataCreate"
@@ -198,7 +246,7 @@ createFormLayout i view formTitle action msgs =
       H.ul . concatMap errorItem
     errorItem =
       H.li . H.toHtml
-    newId = H.toHtml $ show i
+    newTime = H.toHtml $ formatISODateTime $ unsafePerformIO getCurrentTime
 
 
 
@@ -207,36 +255,3 @@ idPage msg =
     mainLayout " Проверка id "  $  do
         H.h1 " Проверка id "
         H.div  $  H.toHtml msg
-
-
-
-idForm :: (Monad m) => DF.Form [Text] m UserId
-idForm = undefined
--- authForm :: (Monad m) => DF.Form [Text] m Auth
--- authForm =
---   Auth <$> "email" .: emailForm
---        <*> "password" .: passwordForm
---   where
---     emailForm = DF.validate (toResult . mkEmail) (DF.text Nothing)
---     passwordForm = DF.validate (toResult . mkPassword) (DF.text Nothing)
-
---     data  Users = Users
---     { 
---       id_user      :: UserId
---     , name         :: String
---     , lastName     :: String
---     , authLogin    :: Login
---     , authPassword :: Password
---     , avatar       :: String
---     , dataCreate   :: UTCTime
---     , authAuthor   :: Bool
---     , authAdmin    :: AccessAdmin
-
-
-
-
---         -- create  :: Maybe Entity  -> m (Either E.Error Entity )
---         -- editing :: Int -> m (Either E.Error Entity)
---         -- getAll  :: m (Either E.Error [Entity])
---         -- getOne  :: Int -> m (Either E.Error  Entity)
---         -- remove  :: Int -> m (Either E.Error ())

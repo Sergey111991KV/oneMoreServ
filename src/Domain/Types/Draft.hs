@@ -11,7 +11,7 @@ data Draft = Draft {
     news_id_draft      :: Int,
     data_create_draft  :: UTCTime
     --  ZonedTime
-    } deriving (Show, Generic)
+    } deriving (Show, Eq, Generic)
 
 instance FromRow Draft where
     fromRow = Draft <$> field <*> field <*> field <*> field 

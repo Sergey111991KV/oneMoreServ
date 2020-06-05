@@ -6,7 +6,7 @@ import Data.Time
 import Control.Monad.Except
 import Katip
 
-data Category = CatCategory1 E.Category1 | CatCategory2 E.Category2 | CatCategory3 E.Category3
+data Category = CatCategory1 E.Category1 | CatCategory2 E.Category2 | CatCategory3 E.Category3 deriving (Show, Eq, Generic)
 data Entity   = 
     EntAuthor   E.Author   | 
     EntCategory Category   | 
@@ -14,7 +14,7 @@ data Entity   =
     EntDraft    E.Draft    |
     EntNews     E.News     | 
     EntUsers    E.Users    | 
-    EntTeg      E.Teg
+    EntTeg      E.Teg deriving (Show, Eq, Generic) 
    -- -- Category | E.Author | E.Comment | E.Draft | E.News | E.Users | E.Teg
 
 -- data family Entity a
@@ -25,11 +25,13 @@ data Entity   =
 
 
 class Monad m =>  CommonService m  where
-    create  :: Maybe Entity  -> m (Either E.Error Entity )
+    create  :: Entity  -> m (Either E.Error Int64 )
+    create' :: E.Users  -> m (Either E.Error Int64 )
     editing :: Int -> m (Either E.Error Entity)
     getAll  :: m (Either E.Error [Entity])
     getOne  :: Int -> m (Either E.Error  Entity)
     remove  :: Int -> m (Either E.Error ())
+    testAction  :: m (Either E.Error Int64 )
 
 -- class Monad m =>  CommonService m  where
 --     create  :: Bool -> Maybe (Entity a) -> m (Either Error (Entity a))

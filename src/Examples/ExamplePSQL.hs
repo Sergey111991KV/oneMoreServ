@@ -9,15 +9,16 @@ import Database.PostgreSQL.Simple
 import Database.PostgreSQL.Simple.FromRow 
 -- import Database.PostgreSQL.Simple.ToField 
 import Database.PostgreSQL.Simple.FromField
-import Domain.ImportEntity as E
 import Data.Time
 import Control.Monad.Catch (MonadThrow, MonadCatch)
 import Data.Has
 import Data.Pool
+import Data.Text.Time
 import qualified Data.Text as Text
 import qualified Data.ByteString as B
 
-
+import qualified Domain.ImportService as S
+import qualified Domain.ImportEntity as E
 
 
 
@@ -309,5 +310,37 @@ import qualified Data.ByteString as B
 --                 conn <- connectPostgreSQL "host='localhost' port=5431 dbname='hblog'" 
 --                 i <- execute conn q s 
 --                 return i
+
+
+
+--                                  new
+-- create ::  May
+create  (S.EntUsers users) = do
+        conn <- connectPostgreSQL "host='localhost' port=5431 dbname='hblog'" 
+        result <-  execute conn q users
+        return $ case result of
+            _        ->  Left E.DataError
+            i        ->  Right i
+        where
+            q = "insert into user_blog (id_user, name, last_name, login, password, avatar, data_create, admini, author) values (?,?,?,?,?,?,?,?,?)"
+            -- "INSERT INTO author (id, description ,user_id) values (?,?,?)"
+            
+
+testUser  ::  S.Entity                                             
+testUser  = S.EntUsers 
+                    (E.Users uid name lastname login password avatar dataCr admin author)
+            where
+                uid = E.UserId 5
+                name = "Igor"
+                lastname = "Popov"
+                login = E.Login "victor@test.com"
+                password = E.Password "1234ABCDefgh"
+                avatar = "url//"
+                dataCr = parseISODateTime ("2011-11-19 18:28:52.607875 UTC")
+                admin =  E.AccessAdmin False
+                author = False
+
+-- create testUser
+
 
     -- :l Examples.ExamplePSQL
