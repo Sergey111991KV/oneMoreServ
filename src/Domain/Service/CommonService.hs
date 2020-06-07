@@ -11,8 +11,17 @@ import Database.PostgreSQL.Simple.ToRow
 import Database.PostgreSQL.Simple.FromRow 
 import Database.PostgreSQL.Simple.ToField 
 import Database.PostgreSQL.Simple.FromField
+import GHC.Generics 
+import Data.Aeson 
+import Data.Time 
 
 data Category = CatCategory1 E.Category1 | CatCategory2 E.Category2 | CatCategory3 E.Category3 deriving (Show, Eq, Generic)
+
+instance FromJSON Category
+instance ToJSON Category
+-- instance  ToRow Category
+
+
 data Entity   = 
     EntAuthor   E.Author   | 
     EntCategory Category   | 
@@ -22,11 +31,21 @@ data Entity   =
     EntUsers    E.Users    | 
     EntTeg      E.Teg deriving (Show, Eq, Generic) 
 
+    
+-- instance FromRow Entity where
+--     fromRow  =  EntAuthor <$> field 
 
-instance FromField Entity  where
-        fromField f bs = undefined
-            -- do
-            -- case 
+-- instance FromJSON Entity
+-- instance ToJSON Entity
+-- instance  ToRow Entity 
+
+
+-- instance FromField Entity  
+-- -- where
+--         fromField f bs = do
+--             case entity of
+--                 (E.Users user) -> EntUsers (E.Users user)
+--             where entity 
    -- -- Category | E.Author | E.Comment | E.Draft | E.News | E.Users | E.Teg
 
 -- data family Entity a
@@ -39,7 +58,7 @@ instance FromField Entity  where
 class Monad m =>  CommonService m  where
     create  :: Entity  -> m (Either E.Error Int64 )
     editing :: Entity -> m (Either E.Error Int64)
-    getAll  :: m (Either E.Error [Entity])
+    getAll  :: Text -> m (Either E.Error [Entity])
     getOne  :: Int -> m (Either E.Error  Entity)
     remove  :: Int -> m (Either E.Error ())
     testAction  :: m (Either E.Error Int64 )

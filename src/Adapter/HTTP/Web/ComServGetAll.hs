@@ -25,3 +25,20 @@ import Domain.ImportEntity as E
 import Domain.ImportService as S
 
 
+routesAll :: ( ScottyError e, MonadIO m, KatipContext m, SessionRepo m, CommonService m)
+          => ScottyT e m ()
+routesAll = do
+       
+        get "/all/:param" $ do 
+            print "all"
+            p   :: Text   <-  param "param" 
+            result <- lift $ getAll p
+            case result of
+                Left er -> text "Error!!"
+                Right res -> print res
+
+            -- view' <- DF.getForm "authAdmin" formTest
+            -- renderHtml $ createTestPage view' []
+        
+      
+            -- (view', mayUser') <- runForm "authAdmin" formTest

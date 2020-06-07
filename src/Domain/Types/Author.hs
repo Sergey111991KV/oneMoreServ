@@ -18,6 +18,8 @@ instance FromRow Author where
 instance FromJSON Author
 instance ToJSON Author
 instance  ToRow Author
+instance FromField Author
+  
 
 
 -- instance FromField Author  where

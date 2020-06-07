@@ -56,6 +56,7 @@ dependencies:
 - wai-middleware-static
 - warp
 - text-time
+- opaleye
 
 default-extensions:
 - NoImplicitPrelude
@@ -73,6 +74,11 @@ default-extensions:
 - MultiParamTypeClasses
 - ScopedTypeVariables
 - GeneralizedNewtypeDeriving
+- FlexibleInstances
+- StandaloneDeriving 
+- UndecidableInstances
+- Arrows 
+- DefaultSignatures               
 
 
 library:

@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: ec38bee4e14b2d84c11a42d79fdb8e3fa5dffc8d1fa073585c1d9af909bf3c8e
+-- hash: 66400b8d59002854771309aa53098b7b50da7784bba18d9908b18ee0072ebf5f
 
 name:           oneMoreServ
 version:        0.1.0.0
@@ -36,6 +36,7 @@ library
       Adapter.HTTP.Web.Auth
       Adapter.HTTP.Web.Common
       Adapter.HTTP.Web.CommonService
+      Adapter.HTTP.Web.ComServCreate
       Adapter.HTTP.Web.ComServGetAll
       Adapter.HTTP.Web.ComServUserUpdate
       Adapter.HTTP.Web.Main
@@ -71,7 +72,7 @@ library
       Paths_oneMoreServ
   hs-source-dirs:
       src
-  default-extensions: NoImplicitPrelude OverloadedStrings QuasiQuotes GeneralizedNewtypeDeriving ConstraintKinds FlexibleContexts TemplateHaskell ExistentialQuantification RecordWildCards TypeFamilies AllowAmbiguousTypes DeriveGeneric MultiParamTypeClasses ScopedTypeVariables GeneralizedNewtypeDeriving
+  default-extensions: NoImplicitPrelude OverloadedStrings QuasiQuotes GeneralizedNewtypeDeriving ConstraintKinds FlexibleContexts TemplateHaskell ExistentialQuantification RecordWildCards TypeFamilies AllowAmbiguousTypes DeriveGeneric MultiParamTypeClasses ScopedTypeVariables GeneralizedNewtypeDeriving FlexibleInstances StandaloneDeriving UndecidableInstances Arrows DefaultSignatures
   build-depends:
       MissingH
     , aeson
@@ -92,6 +93,7 @@ library
     , http-types
     , katip
     , mtl
+    , opaleye
     , pcre-heavy
     , postgresql-libpq >=0.9.4.2
     , postgresql-simple
@@ -116,7 +118,7 @@ executable oneMoreServ-exe
       Paths_oneMoreServ
   hs-source-dirs:
       app
-  default-extensions: NoImplicitPrelude OverloadedStrings QuasiQuotes GeneralizedNewtypeDeriving ConstraintKinds FlexibleContexts TemplateHaskell ExistentialQuantification RecordWildCards TypeFamilies AllowAmbiguousTypes DeriveGeneric MultiParamTypeClasses ScopedTypeVariables GeneralizedNewtypeDeriving
+  default-extensions: NoImplicitPrelude OverloadedStrings QuasiQuotes GeneralizedNewtypeDeriving ConstraintKinds FlexibleContexts TemplateHaskell ExistentialQuantification RecordWildCards TypeFamilies AllowAmbiguousTypes DeriveGeneric MultiParamTypeClasses ScopedTypeVariables GeneralizedNewtypeDeriving FlexibleInstances StandaloneDeriving UndecidableInstances Arrows DefaultSignatures
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       MissingH
@@ -139,6 +141,7 @@ executable oneMoreServ-exe
     , katip
     , mtl
     , oneMoreServ
+    , opaleye
     , pcre-heavy
     , postgresql-libpq >=0.9.4.2
     , postgresql-simple
@@ -164,7 +167,7 @@ test-suite oneMoreServ-test
       Paths_oneMoreServ
   hs-source-dirs:
       test
-  default-extensions: NoImplicitPrelude OverloadedStrings QuasiQuotes GeneralizedNewtypeDeriving ConstraintKinds FlexibleContexts TemplateHaskell ExistentialQuantification RecordWildCards TypeFamilies AllowAmbiguousTypes DeriveGeneric MultiParamTypeClasses ScopedTypeVariables GeneralizedNewtypeDeriving
+  default-extensions: NoImplicitPrelude OverloadedStrings QuasiQuotes GeneralizedNewtypeDeriving ConstraintKinds FlexibleContexts TemplateHaskell ExistentialQuantification RecordWildCards TypeFamilies AllowAmbiguousTypes DeriveGeneric MultiParamTypeClasses ScopedTypeVariables GeneralizedNewtypeDeriving FlexibleInstances StandaloneDeriving UndecidableInstances Arrows DefaultSignatures
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       MissingH
@@ -187,6 +190,7 @@ test-suite oneMoreServ-test
     , katip
     , mtl
     , oneMoreServ
+    , opaleye
     , pcre-heavy
     , postgresql-libpq >=0.9.4.2
     , postgresql-simple

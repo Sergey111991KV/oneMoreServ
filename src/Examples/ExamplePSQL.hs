@@ -21,6 +21,35 @@ import qualified Domain.ImportService as S
 import qualified Domain.ImportEntity as E
 
 
+-- getAll :: Text -> IO ()
+-- getAll x  
+--                 -- | x == "author" = do
+--                 --     return (Left E.AccessError)
+--                 -- | x == "users"  = return (Left E.AccessError)
+--                 -- | x == "tegs"   = return (Left E.AccessError)
+--                 | x == "news"   = do
+--                     result <- getAllNews
+--                     let newResult = fmap convertNewsToEntity result 
+--                     print newResult
+--                     -- new <- fmap convertNewsToEntity result
+                    
+-- getAllNewsText :: Text  
+-- getAllNewsText =  "news"
+
+-- -- getAllNesw :: IO ([S.Entity])
+-- -- getAllNesw = undefined
+
+-- getAllNews :: IO [E.News]
+-- getAllNews = do
+--         let q = "SELECT * FROM news"
+--         conn <- connectPostgreSQL "host='localhost' port=5431 dbname='hblog'" 
+--         i    <- (query_ conn q  :: IO [E.News])
+--         return i
+        
+
+-- convertNewsToEntity ::   E.News ->  S.Entity
+-- convertNewsToEntity (E.News q w e r t y u i) =  S.EntNews (E.News q w e r t y u i)
+
 
 -- type PG r m = (Has State r, MonadReader r m, MonadIO m, MonadThrow m)
 

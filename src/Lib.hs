@@ -33,7 +33,7 @@ instance SessionRepo App where
 instance CommonService App where
       create  =   PG.create
       -- editing =   PG.editing
-      -- getAll  =   PG.getAll
+      getAll  =   PG.getAll
       -- getOne  =   PG.getOne
       -- remove  =   PG.remove
 

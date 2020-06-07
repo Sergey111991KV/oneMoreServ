@@ -128,18 +128,36 @@ editing (S.EntUsers users) = do
 
 getAll :: PG r m => Text -> m (Either E.Error [S.Entity])
 getAll x  
-                | x == "author" = do
-                    return (Left E.AccessError)
-                | x == "users"  = return (Left E.AccessError)
-                | x == "tegs"   = return (Left E.AccessError)
+                | x == "author" = undefined
+                | x == "users"  = undefined
+                | x == "tegs"   = undefined
                 | x == "news"   = do
-                    result <- withConn $ \conn -> query_ conn qry 
-                    return $ case result of
-                        [[(S.EntNews news)]] -> Right [(S.EntNews news)]
-                        _                    -> Left E.DataError
-                    where 
-                            qry = "insert into user_blog (id_user, name, last_name, login, password, avatar, data_create, admini, author) values (?,?,?,?,?,?,?,?,?)"
-                        
+                    print "allNews"
+                    let q = "SELECT * FROM news"
+                    result <- (withConn $ \conn -> query_ conn q  :: IO [E.News])
+                    let  newResult = fmap convertNewsToEntity result
+                    print newResult
+                    return $ case newResult of
+                            []             ->  Left E.DataError
+                            newResult        ->  Right newResult
+          
+                    
+
+getAllNews :: IO (Either E.Error [E.News])
+getAllNews = do
+        let q = "SELECT * FROM news"
+        conn <- connectPostgreSQL "host='localhost' port=5431 dbname='hblog'" 
+        i    <- (query_ conn q  :: IO [E.News])
+        print i
+        return $ case i of
+                _        ->  Left E.DataError
+                i        ->  Right i
+        -- return i
+        
+
+convertNewsToEntity ::   E.News ->  S.Entity
+convertNewsToEntity (E.News q w e r t y u i) =  S.EntNews (E.News q w e r t y u i)
+
 
 -- getOne :: PG r m => Bool -> String ->  Int -> m (Either E.Error  S.Entity)
 -- getOne False _ _   = return (Left E.AccessError)
