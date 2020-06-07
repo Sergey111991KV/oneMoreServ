@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 3e4240e9a6f8560cd4d158f288faef765c0276732e70d92a7d2d42f202865e0f
+-- hash: ec38bee4e14b2d84c11a42d79fdb8e3fa5dffc8d1fa073585c1d9af909bf3c8e
 
 name:           oneMoreServ
 version:        0.1.0.0
@@ -36,6 +36,8 @@ library
       Adapter.HTTP.Web.Auth
       Adapter.HTTP.Web.Common
       Adapter.HTTP.Web.CommonService
+      Adapter.HTTP.Web.ComServGetAll
+      Adapter.HTTP.Web.ComServUserUpdate
       Adapter.HTTP.Web.Main
       Adapter.HTTP.Web.Menu
       Adapter.InMemory.Auth

@@ -37,17 +37,18 @@ create   (S.EntUsers users)  = do
         where
             q = "insert into user_blog (id_user, name, last_name, login, password, avatar, data_create, admini, author) values (?,?,?,?,?,?,?,?,?)"
                                                        
-       
-create' :: PG r m =>  E.Users -> m (Either E.Error Int64 )
-create'   users  = do
-        print "createUsers"
-        result <- withConn $ \conn -> execute conn q users
+
+editing :: PG r m =>  S.Entity -> m (Either E.Error Int64 )
+editing (S.EntUsers users) = do
+        print "editUsers"
+        result <- withConn $ \conn -> execute conn q (E.name users, E.lastName users, E.authLogin users, E.authPassword users, E.avatar users, E.dataCreate users, E.authAdmin users, E.authAuthor users, E.id_user users)
         return $ case result of
             _        ->  Left E.DataError
             i        ->  Right i
         where
-            q = "insert into user_blog (id_user, name, last_name, login, password, avatar, data_create, admini, author) values (?,?,?,?,?,?,?,?,?)"
-                     
+            uId = E.rawUserId $ E.id_user users
+            q = "UPDATE user_blog SET name = (?), last_name = (?), login = (?), password = (?), avatar = (?), data_create = (?), admini = (?), author = (?) where id = (?);"
+
 
 
 
@@ -120,13 +121,25 @@ create'   users  = do
 --                         qry = "insert into auths \
 --                               \(email, pass, email_verification_code, is_email_verified) \
 --                               \values (?, crypt(?, gen_salt('bf')), ?, 'f') returning id"
-    
--- getAll :: PG r m => Bool -> String -> m (Either E.Error [S.Entity])
--- getAll False _ = return (Left E.AccessError)
--- getAll True x  
---                 | x == "author" = return (Left E.AccessError)
---                 | x == "users"  = return (Left E.AccessError)
---                 | x == "tegs"   = return (Left E.AccessError)
+
+
+
+
+
+getAll :: PG r m => Text -> m (Either E.Error [S.Entity])
+getAll x  
+                | x == "author" = do
+                    return (Left E.AccessError)
+                | x == "users"  = return (Left E.AccessError)
+                | x == "tegs"   = return (Left E.AccessError)
+                | x == "news"   = do
+                    result <- withConn $ \conn -> query_ conn qry 
+                    return $ case result of
+                        [[(S.EntNews news)]] -> Right [(S.EntNews news)]
+                        _                    -> Left E.DataError
+                    where 
+                            qry = "insert into user_blog (id_user, name, last_name, login, password, avatar, data_create, admini, author) values (?,?,?,?,?,?,?,?,?)"
+                        
 
 -- getOne :: PG r m => Bool -> String ->  Int -> m (Either E.Error  S.Entity)
 -- getOne False _ _   = return (Left E.AccessError)
@@ -148,3 +161,20 @@ create'   users  = do
 --     allNestedCategory  :: a -> [a]
 --     allUpCategory      :: a -> [a]
 --     allCategory        :: a -> [a]
+
+
+
+
+--                          Examples
+
+
+-- create' :: PG r m =>  E.Users -> m (Either E.Error Int64 )
+-- create'   users  = do
+--         print "createUsers"
+--         result <- withConn $ \conn -> execute conn q users
+--         return $ case result of
+--             _        ->  Left E.DataError
+--             i        ->  Right i
+--         where
+--             q = "insert into user_blog (id_user, name, last_name, login, password, avatar, data_create, admini, author) values (?,?,?,?,?,?,?,?,?)"
+                     

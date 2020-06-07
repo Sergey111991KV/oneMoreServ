@@ -24,39 +24,6 @@ import Adapter.HTTP.Web.Common
 import Domain.ImportEntity as E
 import Domain.ImportService as S
 
-formTest :: (Monad m) => DF.Form [Text] m AccessAdmin
-formTest =
-    "authAdmin"  .: authAdminForm
-    where
-            authAdminForm = DF.validate (toResult . authAdminCreate) (DF.text Nothing)
-
-createTestPage ::  DF.View [Text] -> [Text] -> H.Html
-createTestPage view msgs = 
-  mainLayout "CreateUser" $ do
-    H.div $
-        createFormLayoutTest  view "CreateUser" "/create/user" msgs
-    
-createFormLayoutTest :: DF.View [Text] -> Text -> Text -> [Text] -> H.Html
-createFormLayoutTest view formTitle action msgs =
-  formLayout view action $ do
-    H.h2 $
-      H.toHtml formTitle
-    H.div $
-      errorList msgs
-    H.div $ do
-      H.label "authAdmin"
-      DH.inputText "authAdmin" view
-      H.div $
-        errorList' "authAdmin"
-    H.input ! A.type_ "submit" ! A.value "Submit"
-    where
-        errorList' path =
-            errorList . mconcat $ DF.errors path view 
-        errorList =
-            H.ul . concatMap errorItem
-        errorItem =
-            H.li . H.toHtml
-        newTime = H.toHtml $ formatISODateTime $ unsafePerformIO getCurrentTime
 
 routesCommon :: ( ScottyError e, MonadIO m, KatipContext m, SessionRepo m, CommonService m)
           => ScottyT e m ()
@@ -250,8 +217,45 @@ createFormLayout view formTitle action msgs =
 
 
 
-idPage :: Text -> H.Html
-idPage msg = 
-    mainLayout " Проверка id "  $  do
-        H.h1 " Проверка id "
-        H.div  $  H.toHtml msg
+-- idPage :: Text -> H.Html
+-- idPage msg = 
+--     mainLayout " Проверка id "  $  do
+--         H.h1 " Проверка id "
+--         H.div  $  H.toHtml msg
+
+
+
+
+-- formTest :: (Monad m) => DF.Form [Text] m AccessAdmin
+-- formTest =
+--     "authAdmin"  .: authAdminForm
+--     where
+--             authAdminForm = DF.validate (toResult . authAdminCreate) (DF.text Nothing)
+
+-- createTestPage ::  DF.View [Text] -> [Text] -> H.Html
+-- createTestPage view msgs = 
+--   mainLayout "CreateUser" $ do
+--     H.div $
+--         createFormLayoutTest  view "CreateUser" "/create/user" msgs
+    
+-- createFormLayoutTest :: DF.View [Text] -> Text -> Text -> [Text] -> H.Html
+-- createFormLayoutTest view formTitle action msgs =
+--   formLayout view action $ do
+--     H.h2 $
+--       H.toHtml formTitle
+--     H.div $
+--       errorList msgs
+--     H.div $ do
+--       H.label "authAdmin"
+--       DH.inputText "authAdmin" view
+--       H.div $
+--         errorList' "authAdmin"
+--     H.input ! A.type_ "submit" ! A.value "Submit"
+--     where
+--         errorList' path =
+--             errorList . mconcat $ DF.errors path view 
+--         errorList =
+--             H.ul . concatMap errorItem
+--         errorItem =
+--             H.li . H.toHtml
+--         newTime = H.toHtml $ formatISODateTime $ unsafePerformIO getCurrentTime

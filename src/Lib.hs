@@ -32,7 +32,6 @@ instance SessionRepo App where
   -- findAccessAuthorByUserId = PG.findAccessAuthorByUserId
 instance CommonService App where
       create  =   PG.create
-      create' =  PG.create'
       -- editing =   PG.editing
       -- getAll  =   PG.getAll
       -- getOne  =   PG.getOne

@@ -6,6 +6,12 @@ import Data.Time
 import Control.Monad.Except
 import Katip
 
+import Database.PostgreSQL.Simple.FromField (FromField, fromField)
+import Database.PostgreSQL.Simple.ToRow 
+import Database.PostgreSQL.Simple.FromRow 
+import Database.PostgreSQL.Simple.ToField 
+import Database.PostgreSQL.Simple.FromField
+
 data Category = CatCategory1 E.Category1 | CatCategory2 E.Category2 | CatCategory3 E.Category3 deriving (Show, Eq, Generic)
 data Entity   = 
     EntAuthor   E.Author   | 
@@ -15,6 +21,12 @@ data Entity   =
     EntNews     E.News     | 
     EntUsers    E.Users    | 
     EntTeg      E.Teg deriving (Show, Eq, Generic) 
+
+
+instance FromField Entity  where
+        fromField f bs = undefined
+            -- do
+            -- case 
    -- -- Category | E.Author | E.Comment | E.Draft | E.News | E.Users | E.Teg
 
 -- data family Entity a
@@ -26,8 +38,7 @@ data Entity   =
 
 class Monad m =>  CommonService m  where
     create  :: Entity  -> m (Either E.Error Int64 )
-    create' :: E.Users  -> m (Either E.Error Int64 )
-    editing :: Int -> m (Either E.Error Entity)
+    editing :: Entity -> m (Either E.Error Int64)
     getAll  :: m (Either E.Error [Entity])
     getOne  :: Int -> m (Either E.Error  Entity)
     remove  :: Int -> m (Either E.Error ())
