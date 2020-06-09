@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 66400b8d59002854771309aa53098b7b50da7784bba18d9908b18ee0072ebf5f
+-- hash: 1d028ca0f1516fb8a422dc90b679d70ffd6692303d0c9a6f195e1fbdd5fcb7cf
 
 name:           oneMoreServ
 version:        0.1.0.0
@@ -35,10 +35,11 @@ library
       Adapter.HTTP.Main
       Adapter.HTTP.Web.Auth
       Adapter.HTTP.Web.Common
-      Adapter.HTTP.Web.CommonService
-      Adapter.HTTP.Web.ComServCreate
-      Adapter.HTTP.Web.ComServGetAll
-      Adapter.HTTP.Web.ComServUserUpdate
+      Adapter.HTTP.Web.CommonService.CommonService
+      Adapter.HTTP.Web.CommonService.ComServCreate
+      Adapter.HTTP.Web.CommonService.ComServGetAll
+      Adapter.HTTP.Web.CommonService.ComServGetOne
+      Adapter.HTTP.Web.CommonService.ComServUserUpdate
       Adapter.HTTP.Web.Main
       Adapter.HTTP.Web.Menu
       Adapter.InMemory.Auth
@@ -65,8 +66,11 @@ library
       Domain.Types.News
       Domain.Types.Teg
       Domain.Validation.Validation
+      Examples.ExampFromField
       Examples.ExamplePSQL
       Examples.Examples
+      Examples.ExampToField
+      Examples.ExampToRow
       Lib
   other-modules:
       Paths_oneMoreServ

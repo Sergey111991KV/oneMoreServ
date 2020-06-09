@@ -10,7 +10,7 @@ import Network.Wai.Middleware.Gzip
 
 import qualified Adapter.HTTP.Web.Auth as Auth
 import qualified Adapter.HTTP.Web.Menu as Menu
-import Adapter.HTTP.Web.CommonService as Common
+import Adapter.HTTP.Web.CommonService.CommonService as Common
 
 import Domain.ImportEntity as E
 import Domain.ImportService as S

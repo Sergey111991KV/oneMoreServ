@@ -1,4 +1,4 @@
-module Adapter.HTTP.Web.CommonService where
+module Adapter.HTTP.Web.CommonService.ComServGetAll where
 
 
 import ClassyPrelude
@@ -24,12 +24,21 @@ import Adapter.HTTP.Web.Common
 import Domain.ImportEntity as E
 import Domain.ImportService as S
 
-import Adapter.HTTP.Web.ComServCreate as Create
-import Adapter.HTTP.Web.ComServGetAll as All
 
-
-routesCommon :: ( ScottyError e, MonadIO m, KatipContext m, SessionRepo m, CommonService m)
+routesAll :: ( ScottyError e, MonadIO m, KatipContext m, SessionRepo m, CommonService m)
           => ScottyT e m ()
-routesCommon = do
-        Create.routesComCreate
-        All.routesAll
+routesAll = do
+       
+        get "/all/:param" $ do 
+            print "all"
+            p   :: Text   <-  param "param" 
+            result <- lift $ getAll p
+            case result of
+                Left er -> text "Error!!"
+                Right res -> print res
+
+            -- view' <- DF.getForm "authAdmin" formTest
+            -- renderHtml $ createTestPage view' []
+        
+      
+            -- (view', mayUser') <- runForm "authAdmin" formTest

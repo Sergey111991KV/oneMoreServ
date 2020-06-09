@@ -1,4 +1,4 @@
-module Adapter.HTTP.Web.ComServUserUpdate where
+module Adapter.HTTP.Web.CommonService.ComServUserUpdate where
 
 
 import ClassyPrelude

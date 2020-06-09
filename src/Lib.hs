@@ -34,7 +34,7 @@ instance CommonService App where
       create  =   PG.create
       -- editing =   PG.editing
       getAll  =   PG.getAll
-      -- getOne  =   PG.getOne
+      getOne  =   PG.getOne
       -- remove  =   PG.remove
 
 

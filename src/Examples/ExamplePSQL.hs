@@ -262,14 +262,14 @@ import qualified Domain.ImportEntity as E
 --         [Only i]  <- returning conn "select description from author where user_id = (?) and id = (?)" [(s ,t)]
 --         return i   ---??????
 
--- ss :: IO String
--- ss = do
---         let t = 2 :: Int
---         let s = 2 :: Int
---         conn <- connectPostgreSQL "host='localhost' port=5431 dbname='hblog'" 
---         [Only i]  <- query conn "select description from author where user_id = (?) and id = (?)" (s ,t)
---         print i
---         return i
+ss :: IO String
+ss = do
+        let t = 2 :: Int
+        let s = 2 :: Int
+        conn <- connectPostgreSQL "host='localhost' port=5431 dbname='hblog'" 
+        [Only i]  <- query conn "select description from author where user_id = (?) and id = (?)" (s ,t)
+        print i
+        return i
 
 
 

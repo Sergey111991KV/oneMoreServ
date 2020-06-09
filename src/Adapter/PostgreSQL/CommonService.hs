@@ -1,3 +1,5 @@
+
+
 module Adapter.PostgreSQL.CommonService where
 
 import ClassyPrelude
@@ -36,7 +38,16 @@ create   (S.EntUsers users)  = do
             i        ->  Right i
         where
             q = "insert into user_blog (id_user, name, last_name, login, password, avatar, data_create, admini, author) values (?,?,?,?,?,?,?,?,?)"
-                                                       
+        
+create   (S.EntNews news)  = do
+        print "createNews"
+        result <- withConn $ \conn -> execute conn q news
+        return $ case result of
+            _        ->  Left E.DataError
+            i        ->  Right i
+        where
+            q = "insert into user_blog (id_user, name, last_name, login, password, avatar, data_create, admini, author) values (?,?,?,?,?,?,?,?,?)"
+          
 
 editing :: PG r m =>  S.Entity -> m (Either E.Error Int64 )
 editing (S.EntUsers users) = do
@@ -138,30 +149,52 @@ getAll x
                     let  newResult = fmap convertNewsToEntity result
                     print newResult
                     return $ case newResult of
-                            []             ->  Left E.DataError
+                            [ ]             ->  Left E.DataError
                             newResult        ->  Right newResult
           
-                    
-
-getAllNews :: IO (Either E.Error [E.News])
-getAllNews = do
-        let q = "SELECT * FROM news"
-        conn <- connectPostgreSQL "host='localhost' port=5431 dbname='hblog'" 
-        i    <- (query_ conn q  :: IO [E.News])
-        print i
-        return $ case i of
-                _        ->  Left E.DataError
-                i        ->  Right i
-        -- return i
+                
         
 
 convertNewsToEntity ::   E.News ->  S.Entity
 convertNewsToEntity (E.News q w e r t y u i) =  S.EntNews (E.News q w e r t y u i)
 
 
--- getOne :: PG r m => Bool -> String ->  Int -> m (Either E.Error  S.Entity)
--- getOne False _ _   = return (Left E.AccessError)
--- getOne True  t idE = return (Left E.AccessError)
+getOne :: PG r m => Int -> Text ->  m (Either E.Error  S.Entity)
+getOne  idE text   
+                    | text == "news" = do
+                            let q = "SELECT * FROM news where id = (?)"
+                            i <- (withConn $ \conn -> query conn q [idE] :: IO [E.News])
+                            return $ case i of
+                                    [x]     -> Right (convertNewsToEntity x)
+                                    _      -> Left E.DataError
+                            
+                            -- let newResult = convertNewsToEntity i
+
+                            -- case newResult of
+                            --     result -> return $ Right newResult
+                            --     _      -> return $ Left E.DataError
+
+-- getOneTest :: Int -> IO (S.Entity)
+-- getOneTest idE  = do
+--         let q = "SELECT * FROM news where id = (?)"
+--         conn <- connectPostgreSQL "host='localhost' port=5431 dbname='hblog'"
+--         [i] <- (query conn q [idE] :: IO [E.News])
+--         return (convertNewsToEntity i)
+        -- let newResult = convertNewsToEntity i
+        -- return  newResult 
+
+
+
+
+-- ss :: IO String
+-- ss = do
+--         let t = 2 :: Int
+--         let s = 2 :: Int
+--         conn <- connectPostgreSQL "host='localhost' port=5431 dbname='hblog'" 
+--         [Only i]  <- query conn "select description from author where user_id = (?) and id = (?)" (s ,t)
+--         print i
+--         return i
+
 
 -- remove :: PG r m => Bool ->  S.Entity -> m (Either E.Error ())
 -- remove False _  = return (Left E.AccessError)

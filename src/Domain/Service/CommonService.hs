@@ -59,7 +59,7 @@ class Monad m =>  CommonService m  where
     create  :: Entity  -> m (Either E.Error Int64 )
     editing :: Entity -> m (Either E.Error Int64)
     getAll  :: Text -> m (Either E.Error [Entity])
-    getOne  :: Int -> m (Either E.Error  Entity)
+    getOne  :: Int -> Text -> m (Either E.Error  Entity)
     remove  :: Int -> m (Either E.Error ())
     testAction  :: m (Either E.Error Int64 )
 

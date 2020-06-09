@@ -1,4 +1,4 @@
-module Adapter.HTTP.Web.ComServCreate where
+module Adapter.HTTP.Web.CommonService.ComServCreate where
 
 
 import ClassyPrelude

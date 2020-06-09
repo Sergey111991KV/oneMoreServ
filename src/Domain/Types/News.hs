@@ -4,7 +4,7 @@ import Domain.Types.Imports
 
 import ClassyPrelude
 import           Data.ByteString.Builder
-import Database.PostgreSQL.Simple.FromField (FromField, fromField)
+import Database.PostgreSQL.Simple.FromField 
 -- import           Opaleye
 import Database.PostgreSQL.Simple.Types 
 
@@ -24,9 +24,40 @@ instance FromRow News where
     fromRow = News <$> field <*> field <*> field <*> field <*> field <*> field <*> field <*> field 
     
 
+instance  ToRow News where
+    toRow news = [
+                    toField (id_news news), 
+                    toField (data_create_news news), 
+                    toField (authors_id_news news),
+                    toField (category_3_id_news news), 
+                    toField (text_news news), 
+                    toField (main_photo_url_news news),
+                    toField (other_photo_url_news news), 
+                    toField (short_name_news news)
+                ]
+
+
 instance FromJSON News
 instance ToJSON News
-instance  ToRow News
+-- instance FromField News where
+--     fromField = undefined
+--      fromField :: FieldParser Int)  = (News <$>)  
+--             . (fromField :: FieldParser Int) 
+--             <*> (fromField :: FieldParser UTCTime) 
+--             <*> (fromField :: FieldParser Int)
+--             <*> (fromField :: FieldParser Int)
+--             <*> (fromField :: FieldParser Text)
+--             <*> (fromField :: FieldParser Text)
+--             <*> (fromField :: FieldParser (PGArray Text))
+--             <*> (fromField :: FieldParser Text)
+
+-- instance FromJSON (PGArray Text)
+-- instance FromJSON (PGArray Text)
+-- instance FromJSON (PGArray Text)
+-- instance FromJSON (PGArray Text)
+-- instance FromField (PGArray Text) where
+--     fromField = undefined
+
 
 instance FromJSON (PGArray Text)
 instance ToJSON (PGArray Text)
