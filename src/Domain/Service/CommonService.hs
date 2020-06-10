@@ -15,53 +15,16 @@ import GHC.Generics
 import Data.Aeson 
 import Data.Time 
 
-data Category = CatCategory1 E.Category1 | CatCategory2 E.Category2 | CatCategory3 E.Category3 deriving (Show, Eq, Generic)
-
-instance FromJSON Category
-instance ToJSON Category
--- instance  ToRow Category
 
 
-data Entity   = 
-    EntAuthor   E.Author   | 
-    EntCategory Category   | 
-    EntComment  E.Comment  | 
-    EntDraft    E.Draft    |
-    EntNews     E.News     | 
-    EntUsers    E.Users    | 
-    EntTeg      E.Teg deriving (Show, Eq, Generic) 
-
-    
--- instance FromRow Entity where
---     fromRow  =  EntAuthor <$> field 
-
--- instance FromJSON Entity
--- instance ToJSON Entity
--- instance  ToRow Entity 
-
-
--- instance FromField Entity  
--- -- where
---         fromField f bs = do
---             case entity of
---                 (E.Users user) -> EntUsers (E.Users user)
---             where entity 
-   -- -- Category | E.Author | E.Comment | E.Draft | E.News | E.Users | E.Teg
-
--- data family Entity a
--- data instance Entity Author = WrapAuthor Author
-
--- returnEntity :: Entity -> Entity
--- returnEntity (Nonempt (E.Author xx dd rr)) = Nonempt (E.Author (xx + 1) dd (rr + 1))
 
 
 class Monad m =>  CommonService m  where
-    create  :: Entity  -> m (Either E.Error Int64 )
-    editing :: Entity -> m (Either E.Error Int64)
-    getAll  :: Text -> m (Either E.Error [Entity])
-    getOne  :: Int -> Text -> m (Either E.Error  Entity)
-    remove  :: Int -> m (Either E.Error ())
-    testAction  :: m (Either E.Error Int64 )
+    create  :: E.Entity  -> m (Either E.Error Int64)
+    editing :: E.Entity -> m (Either E.Error Int64)
+    getAll  :: Text -> m (Either E.Error [E.Entity])
+    getOne  :: Text -> Int ->  m (Either E.Error  E.Entity)
+    remove  :: Text -> Int ->  m (Either E.Error Int64)
 
 -- class Monad m =>  CommonService m  where
 --     create  :: Bool -> Maybe (Entity a) -> m (Either Error (Entity a))
@@ -72,9 +35,9 @@ class Monad m =>  CommonService m  where
 
 
 class Monad m =>  CategoryService m where
-    allNestedCategory  :: Category ->  m [Category]
-    allUpCategory      :: Category -> m [Category]
-    allCategory        :: Category -> m [Category]
+    allNestedCategory  :: E.Category ->  m [E.Category]
+    allUpCategory      :: E.Category -> m [E.Category]
+    allCategory        :: E.Category -> m [E.Category]
     
 
 -- class CategoryForForall a where

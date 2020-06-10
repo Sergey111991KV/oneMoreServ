@@ -32,10 +32,15 @@ instance SessionRepo App where
   -- findAccessAuthorByUserId = PG.findAccessAuthorByUserId
 instance CommonService App where
       create  =   PG.create
-      -- editing =   PG.editing
+      editing =   PG.editing
       getAll  =   PG.getAll
       getOne  =   PG.getOne
-      -- remove  =   PG.remove
+      remove  =   PG.remove
+
+
+instance SearchIn App where
+    inContent =  PG.inContent
+    -- inEntyty  = PG.inEntyty
 
 
 mainL :: IO ()

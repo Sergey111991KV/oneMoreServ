@@ -1,5 +1,3 @@
-
-
 module Adapter.PostgreSQL.CommonService where
 
 import ClassyPrelude
@@ -14,23 +12,12 @@ import Data.Text.Time
 import qualified Domain.ImportService as S
 import qualified Domain.ImportEntity as E
 import Adapter.PostgreSQL.CommonPostgres as CP
-import Adapter.PostgreSQL.CommonService.ImportCommon as CSP
 
 
 
     
-create  :: PG r m =>  S.Entity -> m (Either E.Error Int64 )
--- create = undefined
--- create  (Just (S.EntAuthor (E.Author idA text idU)))  = do
---         result <- withConn $ \conn -> query conn qry (idA, text, idU)
---         return $ case result of
---             _                          ->  Left E.DataError
---             [(idA, text, idU)]         ->  Right (S.EntAuthor (E.Author idA text idU)) 
---         where
---                         qry = "insert into auths \
---                               \(email, pass, email_verification_code, is_email_verified) \
---                               \values (?, crypt(?, gen_salt('bf')), ?, 'f') returning id"
-create   (S.EntUsers users)  = do
+create  :: PG r m =>  E.Entity -> m (Either E.Error Int64 )
+create   (E.EntUsers users)  = do
         print "createUsers"
         result <- withConn $ \conn -> execute conn q users
         return $ case result of
@@ -39,7 +26,7 @@ create   (S.EntUsers users)  = do
         where
             q = "insert into user_blog (id_user, name, last_name, login, password, avatar, data_create, admini, author) values (?,?,?,?,?,?,?,?,?)"
         
-create   (S.EntNews news)  = do
+create   (E.EntNews news)  = do
         print "createNews"
         result <- withConn $ \conn -> execute conn q news
         return $ case result of
@@ -49,8 +36,10 @@ create   (S.EntNews news)  = do
             q = "insert into user_blog (id_user, name, last_name, login, password, avatar, data_create, admini, author) values (?,?,?,?,?,?,?,?,?)"
           
 
-editing :: PG r m =>  S.Entity -> m (Either E.Error Int64 )
-editing (S.EntUsers users) = do
+
+
+editing :: PG r m =>  E.Entity -> m (Either E.Error Int64 )
+editing (E.EntUsers users) = do
         print "editUsers"
         result <- withConn $ \conn -> execute conn q (E.name users, E.lastName users, E.authLogin users, E.authPassword users, E.avatar users, E.dataCreate users, E.authAdmin users, E.authAuthor users, E.id_user users)
         return $ case result of
@@ -119,25 +108,9 @@ editing (S.EntUsers users) = do
                     
 
 
-           
-
--- editing :: PG r m => Int -> m (Either E.Error S.Entity)
--- editing False _ = return (Left E.AccessError)
--- editing True (S.EntAuthor (E.Author idA text idU)) = do
---         result <- withConn $ \conn -> query conn qry (idA, text, idU)
---         return $ case result of
---             _                          ->  Left E.DataError
---             [(idA, text, idU)]         ->  Right (S.EntAuthor (E.Author idA text idU)) 
---         where
---                         qry = "insert into auths \
---                               \(email, pass, email_verification_code, is_email_verified) \
---                               \values (?, crypt(?, gen_salt('bf')), ?, 'f') returning id"
 
 
-
-
-
-getAll :: PG r m => Text -> m (Either E.Error [S.Entity])
+getAll :: PG r m => Text -> m (Either E.Error [E.Entity])
 getAll x  
                 | x == "author" = undefined
                 | x == "users"  = undefined
@@ -155,12 +128,12 @@ getAll x
                 
         
 
-convertNewsToEntity ::   E.News ->  S.Entity
-convertNewsToEntity (E.News q w e r t y u i) =  S.EntNews (E.News q w e r t y u i)
+convertNewsToEntity ::   E.News ->  E.Entity
+convertNewsToEntity (E.News q w e r t y u i) =  E.EntNews (E.News q w e r t y u i)
 
 
-getOne :: PG r m => Int -> Text ->  m (Either E.Error  S.Entity)
-getOne  idE text   
+getOne :: PG r m => Text -> Int ->  m (Either E.Error  E.Entity)
+getOne  text idE
                     | text == "news" = do
                             let q = "SELECT * FROM news where id = (?)"
                             i <- (withConn $ \conn -> query conn q [idE] :: IO [E.News])
@@ -168,40 +141,29 @@ getOne  idE text
                                     [x]     -> Right (convertNewsToEntity x)
                                     _      -> Left E.DataError
                             
-                            -- let newResult = convertNewsToEntity i
-
-                            -- case newResult of
-                            --     result -> return $ Right newResult
-                            --     _      -> return $ Left E.DataError
-
--- getOneTest :: Int -> IO (S.Entity)
--- getOneTest idE  = do
---         let q = "SELECT * FROM news where id = (?)"
---         conn <- connectPostgreSQL "host='localhost' port=5431 dbname='hblog'"
---         [i] <- (query conn q [idE] :: IO [E.News])
---         return (convertNewsToEntity i)
-        -- let newResult = convertNewsToEntity i
-        -- return  newResult 
+ 
 
 
 
+remove :: PG r m => Text -> Int -> m (Either E.Error Int64)
 
--- ss :: IO String
--- ss = do
---         let t = 2 :: Int
---         let s = 2 :: Int
---         conn <- connectPostgreSQL "host='localhost' port=5431 dbname='hblog'" 
---         [Only i]  <- query conn "select description from author where user_id = (?) and id = (?)" (s ,t)
---         print i
---         return i
+remove text idE
+                | text == "author" = do
+                    let q =  "DELETE FROM author WHERE id = (?);"
+                    i <- withConn $ \conn -> execute conn q [idE]
+                    return $ case i of
+                        i -> Right i
+                        _ -> Left E.DataError
+                | text == "users" = do
+                    let q =  "DELETE FROM user_blog WHERE id_user = (?);"
+                    i <- withConn $ \conn -> execute conn q [idE]
+                    return $ case i of
+                        i -> Right i
+                        _ -> Left E.DataError
 
 
--- remove :: PG r m => Bool ->  S.Entity -> m (Either E.Error ())
--- remove False _  = return (Left E.AccessError)
--- remove True (S.EntAuthor (E.Author idA text idU)) = return (Left E.AccessError)
 
-
--- create  :: Maybe Entity  -> m (Either E.Error Entity )
+--     create  :: Maybe Entity  -> m (Either E.Error Entity )
 --     editing :: Int -> m (Either E.Error Entity)
 --     getAll  :: m (Either E.Error [Entity])
 --     getOne  :: Int -> m (Either E.Error  Entity)
@@ -228,4 +190,22 @@ getOne  idE text
 --             i        ->  Right i
 --         where
 --             q = "insert into user_blog (id_user, name, last_name, login, password, avatar, data_create, admini, author) values (?,?,?,?,?,?,?,?,?)"
-                     
+-- create = undefined
+-- create  (Just (S.EntAuthor (E.Author idA text idU)))  = do
+--         result <- withConn $ \conn -> query conn qry (idA, text, idU)
+--         return $ case result of
+--             _                          ->  Left E.DataError
+--             [(idA, text, idU)]         ->  Right (S.EntAuthor (E.Author idA text idU)) 
+--         where
+--                         qry = "insert into auths \
+--                               \(email, pass, email_verification_code, is_email_verified) \
+--                               \values (?, crypt(?, gen_salt('bf')), ?, 'f') returning id"                   
+
+-- getOneTest :: Int -> IO (S.Entity)
+-- getOneTest idE  = do
+--         let q = "SELECT * FROM news where id = (?)"
+--         conn <- connectPostgreSQL "host='localhost' port=5431 dbname='hblog'"
+--         [i] <- (query conn q [idE] :: IO [E.News])
+--         return (convertNewsToEntity i)
+        -- let newResult = convertNewsToEntity i
+        -- return  newResult 

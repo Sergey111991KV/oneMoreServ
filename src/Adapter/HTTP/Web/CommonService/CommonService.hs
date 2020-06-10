@@ -28,6 +28,7 @@ import Domain.ImportService as S
 import Adapter.HTTP.Web.CommonService.ComServCreate as Create
 import Adapter.HTTP.Web.CommonService.ComServGetAll as All
 import Adapter.HTTP.Web.CommonService.ComServGetOne as One
+import Adapter.HTTP.Web.CommonService.ComServRemove as Remove
 
 
 routesCommon :: ( ScottyError e, MonadIO m, KatipContext m, SessionRepo m, CommonService m)
@@ -36,3 +37,4 @@ routesCommon = do
         Create.routesComCreate
         All.routesAll
         One.routesOne
+        Remove.routesRemove

@@ -344,7 +344,7 @@ ss = do
 
 --                                  new
 -- create ::  May
-create  (S.EntUsers users) = do
+create  (E.EntUsers users) = do
         conn <- connectPostgreSQL "host='localhost' port=5431 dbname='hblog'" 
         result <-  execute conn q users
         return $ case result of
@@ -355,8 +355,8 @@ create  (S.EntUsers users) = do
             -- "INSERT INTO author (id, description ,user_id) values (?,?,?)"
             
 
-testUser  ::  S.Entity                                             
-testUser  = S.EntUsers 
+testUser  ::  E.Entity                                             
+testUser  = E.EntUsers 
                     (E.Users uid name lastname login password avatar dataCr admin author)
             where
                 uid = E.UserId 5

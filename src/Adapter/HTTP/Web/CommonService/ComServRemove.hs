@@ -1,4 +1,4 @@
-module Adapter.HTTP.Web.CommonService.ComServGetOne where
+module Adapter.HTTP.Web.CommonService.ComServRemove where
 
 
 import ClassyPrelude
@@ -25,15 +25,15 @@ import Domain.ImportEntity as E
 import Domain.ImportService as S
 
 
-routesOne :: ( ScottyError e, MonadIO m, KatipContext m, SessionRepo m, CommonService m)
+routesRemove :: ( ScottyError e, MonadIO m, KatipContext m, SessionRepo m, CommonService m)
           => ScottyT e m ()
-routesOne = do
+routesRemove = do
        
-        get "/one/:name/:idE" $ do 
-            print "one"
+        get "/remove/:name/:idE" $ do 
+            print "remove"
             idE :: Int   <-  param "idE" 
             name   :: Text   <-  param "name" 
-            result <- lift $ getOne name idE
+            result <- lift $ remove name idE
             case result of
                 Left er -> text "Error!!"
                 Right res -> print res

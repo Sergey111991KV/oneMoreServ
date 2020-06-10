@@ -47,7 +47,7 @@ routesComCreate = do
                 Nothing ->
                     renderHtml $ createUserPage view ["Data is incorrect"]
                 Just user -> do
-                    let newUser = S.EntUsers user
+                    let newUser = E.EntUsers user
                     print newUser
                     result <- lift $ create  newUser
                     case result of

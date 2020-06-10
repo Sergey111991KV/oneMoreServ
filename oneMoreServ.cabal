@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 1d028ca0f1516fb8a422dc90b679d70ffd6692303d0c9a6f195e1fbdd5fcb7cf
+-- hash: fef587576969b61bed8064f640f29ef916e55991019c77dfe954df890574a1bb
 
 name:           oneMoreServ
 version:        0.1.0.0
@@ -39,6 +39,7 @@ library
       Adapter.HTTP.Web.CommonService.ComServCreate
       Adapter.HTTP.Web.CommonService.ComServGetAll
       Adapter.HTTP.Web.CommonService.ComServGetOne
+      Adapter.HTTP.Web.CommonService.ComServRemove
       Adapter.HTTP.Web.CommonService.ComServUserUpdate
       Adapter.HTTP.Web.Main
       Adapter.HTTP.Web.Menu
@@ -46,9 +47,8 @@ library
       Adapter.PostgreSQL.Auth
       Adapter.PostgreSQL.CommonPostgres
       Adapter.PostgreSQL.CommonService
-      Adapter.PostgreSQL.CommonService.AuthorCommon
-      Adapter.PostgreSQL.CommonService.ImportCommon
       Adapter.PostgreSQL.ImportPostgres
+      Adapter.PostgreSQL.SearchInService
       Domain.ImportEntity
       Domain.ImportService
       Domain.Service.CommonService
@@ -61,6 +61,7 @@ library
       Domain.Types.Category
       Domain.Types.Comment
       Domain.Types.Draft
+      Domain.Types.Entity
       Domain.Types.Errors
       Domain.Types.Imports
       Domain.Types.News
