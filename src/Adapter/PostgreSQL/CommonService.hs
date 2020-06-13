@@ -15,6 +15,7 @@ import Adapter.PostgreSQL.CommonPostgres as CP
 
 
 
+
     
 create  :: PG r m =>  E.Entity -> m (Either E.Error Int64 )
 create   (E.EntUsers users)  = do
@@ -119,7 +120,7 @@ getAll x
                     print "allNews"
                     let q = "SELECT * FROM news"
                     result <- (withConn $ \conn -> query_ conn q  :: IO [E.News])
-                    let  newResult = fmap convertNewsToEntity result
+                    let  newResult = fmap E.convertToEntity result
                     print newResult
                     return $ case newResult of
                             [ ]             ->  Left E.DataError
@@ -128,8 +129,6 @@ getAll x
                 
         
 
-convertNewsToEntity ::   E.News ->  E.Entity
-convertNewsToEntity (E.News q w e r t y u i) =  E.EntNews (E.News q w e r t y u i)
 
 
 getOne :: PG r m => Text -> Int ->  m (Either E.Error  E.Entity)
@@ -138,7 +137,7 @@ getOne  text idE
                             let q = "SELECT * FROM news where id = (?)"
                             i <- (withConn $ \conn -> query conn q [idE] :: IO [E.News])
                             return $ case i of
-                                    [x]     -> Right (convertNewsToEntity x)
+                                    [x]     -> Right (E.convertToEntity x)
                                     _      -> Left E.DataError
                             
  

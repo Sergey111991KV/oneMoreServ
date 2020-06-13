@@ -11,17 +11,18 @@ import Network.Wai.Middleware.Gzip
 import qualified Adapter.HTTP.Web.Auth as Auth
 import qualified Adapter.HTTP.Web.Menu as Menu
 import Adapter.HTTP.Web.CommonService.CommonService as Common
+import Adapter.HTTP.Web.SearchIn.SearchIn  as SearchIn
 
 import Domain.ImportEntity as E
 import Domain.ImportService as S
 
-mainWEB :: ( MonadIO m, KatipContext m, SessionRepo m, CommonService m)
+mainWEB :: ( MonadIO m, KatipContext m, SessionRepo m, CommonService m, SearchIn m)
      => (m Response -> IO Response) -> IO Application
 mainWEB runner = do
   cacheContainer <- initCaching PublicStaticCaching
   scottyAppT runner $ routes cacheContainer
 
-routes :: ( MonadIO m, KatipContext m, SessionRepo m, CommonService m)
+routes :: ( MonadIO m, KatipContext m, SessionRepo m, CommonService m, SearchIn m)
        => CacheContainer -> ScottyT LText m ()
 routes cacheContainer = do
   middleware $
@@ -31,6 +32,7 @@ routes cacheContainer = do
   Menu.routesMenu
   Auth.routesAuth
   Common.routesCommon
+  SearchIn.routesSearchInNewsText
 
 
   notFound $ do

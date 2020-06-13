@@ -9,7 +9,7 @@ import Katip
 import Domain.Service.CommonService 
 import Domain.Service.FilterService 
 
-class (FilterService m , CommonService m ) => SortedOf m  where        --     API новостей должно поддерживать сортировку по:
+class  CommonService m  => SortedOf m  where        --     API новостей должно поддерживать сортировку по:
     sortedDate      :: Day -> m [a]           -- дате,
     sortedAuthor    :: Author -> m [a]        -- автору (имя по алфавиту),
     sortedCategory  :: [a] -> m [a] -- по категориям (название по алфавиту), 

@@ -56,7 +56,10 @@ dependencies:
 - wai-middleware-static
 - warp
 - text-time
-- opaleye
+# - opaleye
+- attoparsec
+
+
 
 default-extensions:
 - NoImplicitPrelude

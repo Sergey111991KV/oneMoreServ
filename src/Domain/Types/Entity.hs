@@ -30,8 +30,56 @@ data Entity   =
     EntTeg      Teg deriving (Show, Eq, Generic) 
 
 
+                                        -- Convert throw data
 
-        
+
+class ConvertEntity a where
+            convertToEntity :: a -> Entity
+            convertFromEntity :: Entity -> a
+
+instance ConvertEntity Author where
+            convertToEntity a =  EntAuthor a
+            convertFromEntity (EntAuthor a) = a
+
+instance ConvertEntity Category where
+            convertToEntity a =  EntCategory a
+            convertFromEntity (EntCategory a) = a
+
+instance ConvertEntity Comment where
+            convertToEntity a =  EntComment a
+            convertFromEntity (EntComment a) = a
+
+instance ConvertEntity Draft where
+            convertToEntity a =  EntDraft a
+            convertFromEntity (EntDraft a) = a
+
+instance ConvertEntity News where
+            convertToEntity a =  EntNews a
+            convertFromEntity (EntNews a) = a
+
+instance ConvertEntity Users where
+            convertToEntity a =  EntUsers a
+            convertFromEntity (EntUsers a) = a
+
+instance ConvertEntity Teg where
+            convertToEntity a =  EntTeg a
+            convertFromEntity (EntTeg a) = a
+
+
+-- convertNewsToEntity ::   E.News ->  E.Entity
+-- convertNewsToEntity (E.News q w e r t y u i) =  E.EntNews (E.News q w e r t y u i)
+            
+--             -- convertToEntity :: a ->  E.Entity
+--             -- convertToEntity = undefined
+            
+--             -- convertFromEntity ::  E.Entity  -> a
+--             -- convertFromEntity ent = 
+--             --   case ent of 
+--             --       E.EntNews (E.News q w e r t y u i) -> (E.News q w e r t y u i)
+--             --       _ -> False
+                 
+            
+
 -- instance FromRow Entity where
 --     fromRow  =  EntAuthor <$> field 
 

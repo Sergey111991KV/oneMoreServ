@@ -48,3 +48,4 @@ withConn :: PG r m => (Connection -> IO a) -> m a
 withConn action = do
   pool <- asks getter
   liftIO . withResource pool $ \conn -> action conn
+

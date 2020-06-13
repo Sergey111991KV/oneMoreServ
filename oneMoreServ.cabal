@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: fef587576969b61bed8064f640f29ef916e55991019c77dfe954df890574a1bb
+-- hash: 76bde84b3a2df02c34a7f3a995e032d2efaf7f200f1b23d5378ee2ec0aeb2a02
 
 name:           oneMoreServ
 version:        0.1.0.0
@@ -43,17 +43,20 @@ library
       Adapter.HTTP.Web.CommonService.ComServUserUpdate
       Adapter.HTTP.Web.Main
       Adapter.HTTP.Web.Menu
+      Adapter.HTTP.Web.SearchIn.SearchIn
       Adapter.InMemory.Auth
       Adapter.PostgreSQL.Auth
       Adapter.PostgreSQL.CommonPostgres
       Adapter.PostgreSQL.CommonService
+      Adapter.PostgreSQL.FilterService
       Adapter.PostgreSQL.ImportPostgres
-      Adapter.PostgreSQL.SearchInService
+      Adapter.PostgreSQL.SearchIn
+      Adapter.PostgreSQL.SortedService
       Domain.ImportEntity
       Domain.ImportService
       Domain.Service.CommonService
       Domain.Service.FilterService
-      Domain.Service.SearchInService
+      Domain.Service.SearchIn
       Domain.Service.SessionRepoService
       Domain.Service.SortedOfService
       Domain.Types.AccesTypes
@@ -81,6 +84,7 @@ library
   build-depends:
       MissingH
     , aeson
+    , attoparsec
     , base >=4.7 && <5
     , blaze-builder
     , blaze-html
@@ -98,7 +102,6 @@ library
     , http-types
     , katip
     , mtl
-    , opaleye
     , pcre-heavy
     , postgresql-libpq >=0.9.4.2
     , postgresql-simple
@@ -128,6 +131,7 @@ executable oneMoreServ-exe
   build-depends:
       MissingH
     , aeson
+    , attoparsec
     , base >=4.7 && <5
     , blaze-builder
     , blaze-html
@@ -146,7 +150,6 @@ executable oneMoreServ-exe
     , katip
     , mtl
     , oneMoreServ
-    , opaleye
     , pcre-heavy
     , postgresql-libpq >=0.9.4.2
     , postgresql-simple
@@ -177,6 +180,7 @@ test-suite oneMoreServ-test
   build-depends:
       MissingH
     , aeson
+    , attoparsec
     , base >=4.7 && <5
     , blaze-builder
     , blaze-html
@@ -195,7 +199,6 @@ test-suite oneMoreServ-test
     , katip
     , mtl
     , oneMoreServ
-    , opaleye
     , pcre-heavy
     , postgresql-libpq >=0.9.4.2
     , postgresql-simple
