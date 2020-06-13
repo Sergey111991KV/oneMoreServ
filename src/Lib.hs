@@ -43,6 +43,13 @@ instance SearchIn App where
     -- inEntyty  = PG.inEntyty
 
 
+instance FilterService App where
+    filterOfData        =  PG.filterOfData  
+    filterAuthor        =  PG.filterAuthor
+    -- filterCategory      =  PG.filterCategory
+    -- filterTeg           =  PG.filterTeg
+   
+
 mainL :: IO ()
 mainL = do
     withState $ \port le state -> do
