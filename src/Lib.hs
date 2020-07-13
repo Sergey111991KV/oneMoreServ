@@ -8,16 +8,15 @@ import Domain.ImportService
 import Domain.ImportEntity
 import ClassyPrelude
 import Control.Monad.Catch (MonadThrow, MonadCatch)
-import Katip
 import qualified Adapter.HTTP.Main as HTTP
 
 type State = (PG.State)
 newtype App a = App
-  { unApp :: ReaderT State (KatipContextT IO) a
-  } deriving (Applicative, Functor, Monad, MonadReader State, MonadIO, KatipContext, Katip, MonadThrow)
+  { unApp :: ReaderT State IO a
+  } deriving (Applicative, Functor, Monad, MonadReader State, MonadIO, MonadThrow)
 
-run :: LogEnv -> State -> App a -> IO a
-run le state = runKatipContextT le () mempty . flip runReaderT state . unApp
+run :: State -> App a -> IO a
+run  state =  flip runReaderT state . unApp
 
 
 instance SessionRepo App where
@@ -52,30 +51,29 @@ instance FilterService App where
 
 mainL :: IO ()
 mainL = do
-    withState $ \port le state -> do
-      let runner = run le state
+    withState $ \port  state -> do
+      let runner = run  state
       HTTP.mainALL port runner
       
     
     
  
 
-withKatip :: (LogEnv -> IO a) -> IO a
-withKatip app =
-  bracket createLogEnv closeScribes app
-  where
-    createLogEnv = do
-      logEnv <- initLogEnv "HAuth" "prod"
-      stdoutScribe <- mkHandleScribe ColorIfTerminal stdout (permitItem InfoS) V2
-      registerScribe "stdout" stdoutScribe defaultScribeSettings logEnv
+-- withKatip :: (LogEnv -> IO a) -> IO a
+-- withKatip app =
+--   bracket createLogEnv closeScribes app
+--   where
+--     createLogEnv = do
+--       logEnv <- initLogEnv "HAuth" "prod"
+--       stdoutScribe <- mkHandleScribe ColorIfTerminal stdout (permitItem InfoS) V2
+--       registerScribe "stdout" stdoutScribe defaultScribeSettings logEnv
       
       
-withState :: (Int -> LogEnv -> State -> IO ()) -> IO ()
-withState action = 
-  withKatip $ \le -> do
+withState :: (Int -> State -> IO ()) -> IO ()
+withState action =  do
     PG.withState pgCfg $ \pgState -> do
           let state = pgState
-          action port le state
+          action port state
   where
     pgCfg = 
       PG.Config 

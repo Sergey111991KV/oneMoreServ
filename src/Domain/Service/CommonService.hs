@@ -4,7 +4,7 @@ import ClassyPrelude
 import qualified Domain.ImportEntity as E
 import Data.Time
 import Control.Monad.Except
-import Katip
+
 
 import Database.PostgreSQL.Simple.FromField (FromField, fromField)
 import Database.PostgreSQL.Simple.ToRow 
@@ -14,8 +14,6 @@ import Database.PostgreSQL.Simple.FromField
 import GHC.Generics 
 import Data.Aeson 
 import Data.Time 
-
-
 
 
 

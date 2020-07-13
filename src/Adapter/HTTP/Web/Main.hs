@@ -3,7 +3,7 @@ module Adapter.HTTP.Web.Main where
 import ClassyPrelude
 import Web.Scotty.Trans
 import Network.HTTP.Types.Status
-import Katip
+
 import Network.Wai
 import Network.Wai.Middleware.Static
 import Network.Wai.Middleware.Gzip
@@ -17,13 +17,13 @@ import Adapter.HTTP.Web.FilterService.FilterService as Filter
 import Domain.ImportEntity as E
 import Domain.ImportService as S
 
-mainWEB :: ( MonadIO m, KatipContext m, SessionRepo m, CommonService m, SearchIn m,  FilterService m)
+mainWEB :: ( MonadIO m, SessionRepo m, CommonService m, SearchIn m,  FilterService m)
      => (m Response -> IO Response) -> IO Application
 mainWEB runner = do
   cacheContainer <- initCaching PublicStaticCaching
   scottyAppT runner $ routes cacheContainer
 
-routes :: ( MonadIO m, KatipContext m, SessionRepo m, CommonService m, SearchIn m,  FilterService m)
+routes :: ( MonadIO m,  SessionRepo m, CommonService m, SearchIn m,  FilterService m)
        => CacheContainer -> ScottyT LText m ()
 routes cacheContainer = do
   middleware $
@@ -41,7 +41,7 @@ routes cacheContainer = do
     status status404
     text "Not found"
 
-  defaultHandler $ \e -> do
-    lift $ $(logTM) ErrorS $ "Unhandled error: " <> ls (showError e)
-    status status500
-    text "Internal server error!"
+  -- defaultHandler $ \e -> do
+  --   lift $ $(logTM) ErrorS $ "Unhandled error: " <> ls (showError e)
+  --   status status500
+  --   text "Internal server error!"

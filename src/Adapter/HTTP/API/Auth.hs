@@ -6,7 +6,7 @@ import qualified Text.Digestive.Form as DF
 import Text.Digestive.Form ((.:))
 import Network.HTTP.Types.Status
 import Data.Aeson ()
-import Katip
+
 import qualified Text.Read as Text
 
 import Adapter.HTTP.Common
@@ -31,7 +31,7 @@ passForm =
     passwordForm = DF.validate (toResult . mkPassword) (DF.text Nothing)
 
 
-routes :: ( ScottyError e, MonadIO m, KatipContext m, SessionRepo m)
+routes :: ( ScottyError e, MonadIO m, SessionRepo m)
           => ScottyT e m ()
 routes = do
   

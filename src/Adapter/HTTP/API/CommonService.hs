@@ -6,7 +6,7 @@ import qualified Text.Digestive.Form as DF
 import Text.Digestive.Form ((.:))
 import Network.HTTP.Types.Status
 import Data.Aeson ()
-import Katip
+
 
 -- import Adapter.HTTP.Common
 
@@ -20,7 +20,7 @@ import Domain.ImportService as S
 --     getOne  :: String -> Int -> m (Either E.Error  Entity)
 --     remove  :: Entity -> m (Either E.Error ())
 
-routes :: ( ScottyError e, MonadIO m, KatipContext m, SessionRepo m)
+routes :: ( ScottyError e, MonadIO m, SessionRepo m)
           => ScottyT e m ()
 routes = undefined
 --         post "/api/create/login" $ do

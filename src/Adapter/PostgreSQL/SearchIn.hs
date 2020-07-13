@@ -3,7 +3,6 @@ module Adapter.PostgreSQL.SearchIn where
 import ClassyPrelude
 import Data.Time
 import Control.Monad.Except
-import Katip
 import Database.PostgreSQL.Simple
 import Data.Maybe
 import Data.Text.Time

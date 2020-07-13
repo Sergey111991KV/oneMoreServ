@@ -1,7 +1,7 @@
 module Examples.ExamplePSQL where
 
         
-import Katip
+
 import ClassyPrelude
 -- import Database.PostgreSQL.Simple.Migration
 import Database.PostgreSQL.Simple

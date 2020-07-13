@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 79076e8a35415db1cd0fd64a1a1b5803c77f95b254b40f4fa5b1e87238c07eff
+-- hash: 6adb35e893cef032bff9f1f73d80b38c55106288bcfcebeda669b0ce0df92e74
 
 name:           oneMoreServ
 version:        0.1.0.0
@@ -28,6 +28,7 @@ source-repository head
 library
   exposed-modules:
       Adapter.HTTP.API.Auth
+      Adapter.HTTP.API.Client
       Adapter.HTTP.API.Common
       Adapter.HTTP.API.CommonService
       Adapter.HTTP.API.Main
@@ -53,6 +54,7 @@ library
       Adapter.PostgreSQL.ImportPostgres
       Adapter.PostgreSQL.SearchIn
       Adapter.PostgreSQL.SortedService
+      Config
       Domain.ImportEntity
       Domain.ImportService
       Domain.Service.CommonService
@@ -72,11 +74,10 @@ library
       Domain.Types.Teg
       Domain.Validation.Validation
       Examples.ExampFromField
+      Examples.ExampleJSON
       Examples.ExamplePSQL
-      Examples.Examples
-      Examples.ExampToField
-      Examples.ExampToRow
       Lib
+      Logging
   other-modules:
       Paths_oneMoreServ
   hs-source-dirs:
@@ -100,8 +101,9 @@ library
     , digestive-functors-scotty
     , exceptions
     , hedis
+    , http-client
+    , http-client-tls
     , http-types
-    , katip
     , mtl
     , pcre-heavy
     , postgresql-libpq >=0.9.4.2
@@ -147,8 +149,9 @@ executable oneMoreServ-exe
     , digestive-functors-scotty
     , exceptions
     , hedis
+    , http-client
+    , http-client-tls
     , http-types
-    , katip
     , mtl
     , oneMoreServ
     , pcre-heavy
@@ -196,8 +199,9 @@ test-suite oneMoreServ-test
     , digestive-functors-scotty
     , exceptions
     , hedis
+    , http-client
+    , http-client-tls
     , http-types
-    , katip
     , mtl
     , oneMoreServ
     , pcre-heavy

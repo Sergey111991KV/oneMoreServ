@@ -5,7 +5,7 @@ import Domain.Types.Imports
 import Domain.Validation.Validation
 import Text.Regex.PCRE.Heavy
 import Control.Monad.Except
-import Katip
+
 import GHC.Generics
 import Database.PostgreSQL.Simple.FromField (FromField, fromField)
 import Database.PostgreSQL.Simple.ToRow 

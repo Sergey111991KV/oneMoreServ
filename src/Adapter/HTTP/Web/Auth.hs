@@ -7,7 +7,7 @@ import Text.Digestive.Scotty
 import qualified Text.Digestive.Form as DF
 import qualified Text.Digestive.View as DF
 import Text.Digestive.Form ((.:))
-import Katip
+
 import Text.Blaze.Html5 ((!))
 import qualified Text.Digestive.Blaze.Html5 as DH
 import qualified Text.Blaze.Html5 as H
@@ -22,7 +22,7 @@ import Domain.ImportService as S
 
 data Auth = Auth Login Password
 
-routesAuth :: ( ScottyError e, MonadIO m, KatipContext m, SessionRepo m)
+routesAuth :: ( ScottyError e, MonadIO m, SessionRepo m)
           => ScottyT e m ()
 routesAuth = do
         get "/" $

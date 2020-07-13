@@ -5,7 +5,6 @@ import Web.Scotty.Trans
 import Network.HTTP.Types.Status
 
 import Adapter.HTTP.Common
-import Katip
 import Network.Wai
 import Network.Wai.Middleware.Gzip
 
@@ -15,19 +14,20 @@ import Domain.ImportService as S
 import Adapter.HTTP.API.Common
 import qualified Adapter.HTTP.API.Auth as AuthAPI
 
-mainAPI :: ( MonadIO m, KatipContext m, SessionRepo m)
+mainAPI :: ( MonadIO m, SessionRepo m)
      => (m Response -> IO Response) -> IO Application
 mainAPI runner =
         scottyAppT runner routes
       
 
-routes :: ( MonadIO m, KatipContext m, SessionRepo m)
+routes :: ( MonadIO m, SessionRepo m)
           => ScottyT LText m ()
-routes = do
+routes  = undefined       
+-- routes = do
 
-  AuthAPI.routes
+--   AuthAPI.routes
   
-  defaultHandler $ \e -> do
-    lift $ $(logTM) ErrorS $ "Unhandled error: " <> ls (showError e)
-    status status500
-    json ("InternalServerError" :: Text)
+--   defaultHandler $ \e -> do
+--     lift $  ErrorS $ "Unhandled error: " <>  (showError e)
+--     status status500
+--     json ("InternalServerError" :: Text)

@@ -1,7 +1,7 @@
 module Examples.ExampFromField where
 
         
-import Katip
+
 import ClassyPrelude
 import Database.PostgreSQL.Simple
 import Database.PostgreSQL.Simple.FromField

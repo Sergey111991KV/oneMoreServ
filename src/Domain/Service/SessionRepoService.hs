@@ -3,7 +3,7 @@ module Domain.Service.SessionRepoService where
 import ClassyPrelude
 import Data.Time
 import Control.Monad.Except
-import Katip
+
 
 import Domain.ImportEntity
 import Domain.Service.CommonService 
@@ -20,15 +20,15 @@ class Monad m => SessionRepo m where
 
             --- Katip
 
-withUserIdContext :: (KatipContext m) => UserId -> m a -> m a
-withUserIdContext uId = katipAddContext (sl "userId" uId)
+withUserIdContext :: UserId -> m a -> m a
+withUserIdContext uId = undefined
 
             ---  Loging
             
 resolveSessionId :: SessionRepo m => SessionId -> m (Maybe UserId)
 resolveSessionId = findUserIdBySessionId
           
-login :: (KatipContext m, SessionRepo m) => Login -> Password -> m (Either LoginError SessionId)
+login :: SessionRepo m => Login -> Password -> m (Either LoginError SessionId)
 login log pass = runExceptT $ do
   resultFirst  <- lift $ findUsers log pass
   case resultFirst of
